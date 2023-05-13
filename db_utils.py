@@ -58,11 +58,11 @@ class DBSearch:
                 db_connection.close()
 
     @staticmethod
-    def create_new_user(username, password):
+    def create_new_user(username, password, city):
         try:
             db_connection = connect_to_db()
             cursor = db_connection.cursor()
-            query = "INSERT INTO users (username, password) VALUES ({}, {})".format(username, password)
+            query = "INSERT INTO users (username, password, city) VALUES ({}, {}, {})".format(username, password, city)
             cursor.execute(query)
         except Exception:
             raise NoConnection
