@@ -1,14 +1,19 @@
-
 CREATE DATABASE wardrobe_planner;
 USE wardrobe_planner;
 
 CREATE TABLE users (
     user_ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     user_name VARCHAR(50) NOT NULL,
-    user_password VARCHAR(50),
-    home_town VARCHAR(50)
+    user_password VARCHAR(50)
+
 );
 
+CREATE TABLE user_location (
+    user_ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    home_town VARCHAR(50),
+    longitude FLOAT,
+    latitude FLOAT
+);
 
 CREATE TABLE friends (
 	user_ID INT NOT NULL,
@@ -42,14 +47,21 @@ CREATE TABLE availability_status (
     FOREIGN KEY (item_ID) REFERENCES clothes(item_ID)
 );
 
-INSERT INTO users (user_ID, user_name, user_password, home_town)
+INSERT INTO users (user_ID, user_name, user_password)
 VALUES
- (1, 'Anna', 'MyPassword123', 'Warsaw'),
- (2, 'Maria', 'Diffi456', 'Cracow'),
- (3, 'Jenny', 'SomE56', 'Gdansk'),
- (4, 'Lucy', 'ProT897', 'Wroclaw')
+ (1, 'Anna', 'MyPassword123'),
+ (2, 'Maria', 'Diffi456'),
+ (3, 'Jenny', 'SomE56'),
+ (4, 'Lucy', 'ProT897')
 ;
 
+INSERT INTO user_location (user_ID, home_town, longitude, latitude)
+VALUES
+ (1, 'Warsaw', 21.01, 52.23),
+ (2, 'Cracow', 19.94, 50.06),
+ (3, 'Gdansk', 18.61, 54.37),
+ (4, 'Wroclaw', 17.03, 51.11)
+;
 
 INSERT INTO friends(user_ID, friend_ID)
 VALUES
@@ -64,7 +76,7 @@ VALUES
  (3, 2),
  (3, 3),
  (4, 2),
- (4, 3)
+ (4, 3),
  (4, 4)
 ;
 
@@ -627,6 +639,8 @@ VALUES
 
 
 
+
+
 -- running a search based on certain tags:
 
 -- SELECT c.item_description, c.item_id, o.owner_id
@@ -656,8 +670,6 @@ VALUES
 --     WHERE c.weather_tag = 'mild'
 --     AND c.occasion_tag = 'work'
 --     AND c.mood_tag = 'neutral' );
-
-
 
 
 
