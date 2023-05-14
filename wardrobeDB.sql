@@ -624,3 +624,64 @@ VALUES
 -- WHERE status = 'dirty';
 
 
+
+
+
+-- running a search based on certain tags:
+
+-- SELECT c.item_description, c.item_id, o.owner_id
+-- FROM clothes AS c
+-- -- JOIN with availability_status TABLE
+-- INNER JOIN
+-- 	(SELECT item_id
+-- 	FROM availability_status
+-- 	WHERE item_status = 'available') AS a
+-- ON c.item_ID = a.item_ID
+
+-- -- JOIN with ownership TABLE
+-- INNER JOIN ownership AS o
+-- ON o.item_ID = c.item_ID
+
+-- -- JOIN with friends TABLE
+-- INNER JOIN
+-- 	(SELECT user_ID
+--     FROM friends
+--     WHERE friend_ID = 1
+--     ) AS f
+-- ON f.user_ID = o.owner_ID
+
+-- AND c.item_id IN (
+--     SELECT c.item_ID
+--     FROM clothes AS c
+--     WHERE c.weather_tag = 'mild'
+--     AND c.occasion_tag = 'work'
+--     AND c.mood_tag = 'neutral' );
+
+
+
+
+
+
+
+-- alternative code for performing the same search:
+
+-- SELECT c.item_description, c.item_ID, o.owner_ID
+-- FROM clothes AS c
+-- INNER JOIN availability_status AS a ON c.item_ID = a.item_ID
+-- INNER JOIN ownership AS o ON c.item_id = o.item_id
+-- WHERE a.item_status = 'available'
+-- AND c.item_id IN (
+--     SELECT c.item_id
+--     FROM clothes AS c
+--     WHERE c.weather_tag = 'mild'
+--     AND c.occasion_tag = 'work'
+--     AND c.mood_tag = 'neutral'
+-- )
+-- AND c.item_id IN (
+--     SELECT o.item_id
+--     FROM ownership AS o
+-- 	WHERE o.owner_id IN (
+-- 		SELECT f.user_ID
+-- 		FROM friends AS f
+--         WHERE f.friend_ID = 1)
+--         );
