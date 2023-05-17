@@ -648,10 +648,7 @@ VALUES
 --   WHERE o.owner_id = 1
 -- );
 
-select *
-from  availability_status AS a
-LEFT JOIN OWNERSHIP AS o
-ON a.item_id = o.item_id;
+
 
 
 -- changing the item status from 'available' to 'taken' after it was selected by a user
