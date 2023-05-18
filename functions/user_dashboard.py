@@ -3,7 +3,7 @@ def user_dashboard_choice():
     print("1. Show User Info \n"
           "2. Search Wardrobe \n"
           "3. Manage Wardrobe \n"
-          "4. Do Laundry \n"
+          "4. Manage Friends \n"
           "5. Log Out / Exit")
     try:
         user_choice = int(input("What would you like to do? "))
