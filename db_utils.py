@@ -24,7 +24,7 @@ class DBSearch:
         try:
             db_connection = connect_to_db()
             cursor = db_connection.cursor()
-            query = "SELECT username FROM users WHERE username = {}".format(username)
+            query = "SELECT user_name FROM users WHERE user_name = {}".format(username)
             cursor.execute(query)
         except Exception:
             raise NoConnection
@@ -43,7 +43,7 @@ class DBSearch:
         try:
             db_connection = connect_to_db()
             cursor = db_connection.cursor()
-            query = "SELECT password FROM users WHERE username = {}".format(username)
+            query = "SELECT user_password FROM users WHERE user_name = {}".format(username)
             cursor.execute(query)
         except Exception:
             raise NoConnection
@@ -58,11 +58,11 @@ class DBSearch:
                 db_connection.close()
 
     @staticmethod
-    def create_new_user(username, password, city):
+    def create_new_user(username, password):
         try:
             db_connection = connect_to_db()
             cursor = db_connection.cursor()
-            query = "INSERT INTO users (username, password, city) VALUES ({}, {}, {})".format(username, password, city)
+            query = "INSERT INTO users (user_name, user_password) VALUES ({}, {})".format(username, password)
             cursor.execute(query)
         except Exception:
             raise NoConnection
@@ -77,7 +77,7 @@ class DBSearch:
         try:
             db_connection = connect_to_db()
             cursor = db_connection.cursor()
-            query = "SELECT user_id FROM users WHERE username = {}".format(username)
+            query = "SELECT user_id FROM users WHERE user_name = {}".format(username)
             cursor.execute(query)
         except Exception:
             raise NoConnection
@@ -109,7 +109,7 @@ class DBSearch:
         try:
             db_connection = connect_to_db()
             cursor = db_connection.cursor()
-            query = "SELECT user_id, username, password, home_town FROM users WHERE user_id = {}".format(user_id)
+            query = "SELECT user_id, user_name, user_password FROM users WHERE user_id = {}".format(user_id)
             # This query will have to be changed to the database naming and structure
             cursor.execute(query)
         except Exception:
@@ -126,7 +126,7 @@ class DBSearch:
         try:
             db_connection = connect_to_db()
             cursor = db_connection.cursor()
-            query = "SELECT user_ID from users WHERE username = {}".format(friend_id)
+            query = "SELECT user_ID from users WHERE user_name = {}".format(friend_id)
             cursor.execute(query)
         except Exception:
             raise NoConnection
@@ -142,7 +142,7 @@ class DBSearch:
         try:
             db_connection = connect_to_db()
             cursor = db_connection.cursor()
-            query = "INSERT INTO friends (userid, friendid) VALUES ({}, {})".format(user_id, friend_id)
+            query = "INSERT INTO friends (user_id, friend_id) VALUES ({}, {})".format(user_id, friend_id)
             cursor.execute(query)
         except Exception:
             raise NoConnection
@@ -156,7 +156,7 @@ class DBSearch:
         try:
             db_connection = connect_to_db()
             cursor = db_connection.cursor()
-            query = "DELETE FROM friends AS f WHERE f.friendid = {})".format(friend_id)
+            query = "DELETE FROM friends AS f WHERE f.friend_id = {})".format(friend_id)
             cursor.execute(query)
         except Exception:
             raise NoConnection
