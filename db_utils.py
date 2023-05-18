@@ -262,32 +262,36 @@ class DBSearch:
     #3. thanks to 2 functions above we have all the tags and can run a search in our wardrobe
     # and wardrobes of everybody who shares clothes with us:
 
-    def search_clothes(weather_tag, occasion_tag, mood_tag, user_id):
-        try:
-            db_connection = connect_to_db()
-            cursor = db_connection.cursor()
-            query = """SELECT c.item_description, c.item_ID, o.owner_ID
-                           FROM clothes AS c
-                           INNER JOIN availability_status AS a ON c.item_ID = a.item_ID
-                           INNER JOIN ownership AS o ON c.item_id = o.item_id
-                           WHERE a.item_status = 'available'
-                           AND c.weather_tag = %s
-                           AND c.occasion_tag = %s
-                           AND c.mood_tag = %s
-                           AND c.item_id IN (
-                               SELECT o.item_id
-                               FROM ownership AS o
-                               WHERE o.owner_id IN (
-                                   SELECT f.user_ID
-                                   FROM friends AS f
-                                   WHERE f.friend_ID = %s
-                               )
-                           )"""
-            cursor.execute(query, (weather_tag, occasion_tag, mood_tag, user_id))
-            result = cursor.fetchall()
-            print("These are all items that are matching your search criteria:")
-            for item in result:
-                print(item)
-            return result
-        except Exception:
-            raise NoConnection
+def search_clothes(weather_tag, occasion_tag, mood_tag, user_id):
+    try:
+        db_connection = connect_to_db()
+        cursor = db_connection.cursor()
+        query = """SELECT c.item_description, c.item_ID, o.owner_ID
+                       FROM clothes AS c
+                       INNER JOIN availability_status AS a ON c.item_ID = a.item_ID
+                       INNER JOIN ownership AS o ON c.item_id = o.item_id
+                       WHERE a.item_status = 'available'
+                       AND c.weather_tag = %s
+                       AND c.occasion_tag = %s
+                       AND c.mood_tag = %s
+                       AND c.item_id IN (
+                           SELECT o.item_id
+                           FROM ownership AS o
+                           WHERE o.owner_id IN (
+                               SELECT f.user_ID
+                               FROM friends AS f
+                               WHERE f.friend_ID = %s
+                           )
+                       )"""
+        cursor.execute(query, (weather_tag, occasion_tag, mood_tag, user_id))
+        result = cursor.fetchall()
+        print("These are all items that are matching your search criteria:")
+        for item in result:
+            item_description = item[0]
+            item_id = item[1]
+            owner_id = item[2]
+            output = "'{}' - item number {} belonging to user {}".format(item_description, item_id, owner_id)
+            print(output)
+        return result
+    except Exception:
+        raise NoConnection
