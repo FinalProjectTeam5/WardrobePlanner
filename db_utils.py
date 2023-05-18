@@ -24,7 +24,7 @@ class DBSearch:
         try:
             db_connection = connect_to_db()
             cursor = db_connection.cursor()
-            query = "SELECT user_name FROM users WHERE user_name = {}".format(username)
+            query = "SELECT user_name FROM users WHERE user_id = {}".format(username)
             cursor.execute(query)
         except Exception:
             raise NoConnection
@@ -187,4 +187,38 @@ class DBSearch:
             else:
                 return "This item is not available to share"
 
+    def show_count_of_clothes_available(user_id):
+        try:
+            db_connection = connect_to_db()
+            cursor = db_connection.cursor()
+            query = """SELECT COUNT(*) AS count_available_items FROM availability_status AS a 
+            JOIN ownership AS o ON a.item_id = o.item_id 
+            WHERE a.item_status = 'available' 
+            AND o.owner_id = {}""".format(user_id)
 
+            cursor.execute(query)
+        except Exception:
+            raise NoConnection
+        else:
+            result = cursor.fetchall()
+            count = result
+            print("You have {} items available in your wardrobe.".format(count))
+            return "You have {} items available in your wardrobe.".format(count)
+
+    def show_count_of_clothes_dirty(user_id):
+        try:
+            db_connection = connect_to_db()
+            cursor = db_connection.cursor()
+            query = """SELECT COUNT(*) AS count_available_items FROM availability_status AS a 
+            JOIN ownership AS o ON a.item_id = o.item_id 
+            WHERE a.item_status = 'dirty' 
+            AND o.owner_id = {}""".format(user_id)
+
+            cursor.execute(query)
+        except Exception:
+            raise NoConnection
+        else:
+            result = cursor.fetchall()
+            count = result
+            print("You have {} items in your wardrobe that are dirty.".format(count))
+            return "You have {} items in your wardrobe that are dirty.".format(count)
