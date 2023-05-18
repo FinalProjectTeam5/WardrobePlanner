@@ -1,14 +1,21 @@
-
+-- DROP DATABASE wardrobe_planner;
 CREATE DATABASE wardrobe_planner;
 USE wardrobe_planner;
 
 CREATE TABLE users (
     user_ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     user_name VARCHAR(50) NOT NULL,
-    user_password VARCHAR(50),
-    home_town VARCHAR(50)
+    user_password VARCHAR(50)
+
 );
 
+CREATE TABLE user_location (
+    user_ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    home_town VARCHAR(50),
+    latitude FLOAT,
+    longitude FLOAT
+
+);
 
 CREATE TABLE friends (
 	user_ID INT NOT NULL,
@@ -42,14 +49,21 @@ CREATE TABLE availability_status (
     FOREIGN KEY (item_ID) REFERENCES clothes(item_ID)
 );
 
-INSERT INTO users (user_ID, user_name, user_password, home_town)
+INSERT INTO users (user_ID, user_name, user_password)
 VALUES
- (1, 'Anna', 'MyPassword123', 'Warsaw'),
- (2, 'Maria', 'Diffi456', 'Cracow'),
- (3, 'Jenny', 'SomE56', 'Gdansk'),
- (4, 'Lucy', 'ProT897', 'Wroclaw')
+ (1, 'Anna', 'MyPassword123'),
+ (2, 'Maria', 'Diffi456'),
+ (3, 'Jenny', 'SomE56'),
+ (4, 'Lucy', 'ProT897')
 ;
 
+INSERT INTO user_location (user_ID, home_town, latitude, longitude)
+VALUES
+ (1, 'Warsaw', 52.23, 21.01),
+ (2, 'Cracow', 50.06, 19.94),
+ (3, 'Gdansk', 54.37, 18.61),
+ (4, 'Wroclaw', 51.11, 17.03)
+;
 
 INSERT INTO friends(user_ID, friend_ID)
 VALUES
@@ -64,7 +78,7 @@ VALUES
  (3, 2),
  (3, 3),
  (4, 2),
- (4, 3)
+ (4, 3),
  (4, 4)
 ;
 
@@ -583,8 +597,14 @@ VALUES
 
 
 -- adding new users. uder_id should be created automatically sice we put it as AUTO_INCREMENT
--- INSERT INTO users (user_name, user_password, home_town)
+-- INSERT INTO users (user_name, user_password)
 -- VALUES ;
+
+-- adding to user_location
+-- INSERT INTO user_location (user_ID, home_town, latitude, longitude)
+-- VALUES ;
+--
+--
 
 
 -- next step is to show all users with their user_id to enable input for the next step:
@@ -619,11 +639,60 @@ VALUES
 
 
 -- running 'laundry' function to clean the clothes, e.g.
--- UPDATE availability_status
--- SET status = 'clean'
--- WHERE status = 'dirty';
+-- UPDATE availability_status AS a
+-- SET a.item_status = 'available'
+-- WHERE a.item_status = 'dirty'
+-- AND a.item_id IN (
+--   SELECT o.item_id
+--   FROM ownership AS o
+--   WHERE o.owner_id = 1
+-- );
 
 
+
+
+-- changing the item status from 'available' to 'taken' after it was selected by a user
+-- UPDATE availability_status AS a
+-- SET a.item_status = 'taken'
+-- WHERE a.item_id in (1,2,3);
+
+-- changing the item status 'dirty' after user puts it away
+-- UPDATE availability_status AS a
+-- SET a.item_status = 'dirty'
+-- WHERE a.item_id in (1,2,3);
+
+
+-- overview of the wardrobes of your own and friends that YOU SHARE your wardrobe with
+-- SELECT u1.user_id, u1.user_name, u2.user_id AS friend_id, u2.user_name AS friend_name
+-- FROM users AS u1
+-- INNER JOIN friends AS f ON u1.user_id = f.user_id
+-- INNER JOIN users AS u2 ON f.friend_id = u2.user_id
+-- WHERE u1.user_id in (2)
+-- ORDER BY u1.user_id;
+
+
+-- overview of users who put you as their friend to SHARE clothes WITH YOU:
+-- SELECT u1.user_id, u1.user_name
+-- FROM users AS u1
+-- INNER JOIN friends AS f ON u1.user_id = f.user_id
+-- INNER JOIN users AS u2 ON f.friend_id = u2.user_id
+-- WHERE u2.user_id in (1)
+-- AND u1.user_id <> 1
+-- ORDER BY u2.user_id;
+
+
+-- count of items with status 'available' for a certain user (user 1):
+-- SELECT COUNT(*) AS count_available_items
+-- FROM availability_status AS a
+-- JOIN ownership AS o ON a.item_id = o.item_id
+-- WHERE a.item_status = 'available' AND o.owner_id = 1;
+
+
+-- count of items with status 'dirty' for a certain user (user 1):
+-- SELECT COUNT(*) AS count_available_items
+-- FROM availability_status AS a
+-- JOIN ownership AS o ON a.item_id = o.item_id
+-- WHERE a.item_status = 'dirty' AND o.owner_id = 1;
 
 
 
@@ -656,8 +725,6 @@ VALUES
 --     WHERE c.weather_tag = 'mild'
 --     AND c.occasion_tag = 'work'
 --     AND c.mood_tag = 'neutral' );
-
-
 
 
 

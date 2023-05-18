@@ -72,6 +72,56 @@ class DBSearch:
             if db_connection:
                 db_connection.close()
 
+    @staticmethod
+    def get_user_id(username):
+        try:
+            db_connection = connect_to_db()
+            cursor = db_connection.cursor()
+            query = "SELECT user_id FROM users WHERE username = {}".format(username)
+            cursor.execute(query)
+        except Exception:
+            raise NoConnection
+        else:
+            result = cursor.fetchall()
+            return result
+        finally:
+            if db_connection:
+                db_connection.close()
+
+    @staticmethod
+    def get_item_id(item_description):
+        try:
+            db_connection = connect_to_db()
+            cursor = db_connection.cursor()
+            query = "SELECT item_id FROM clothes WHERE item_description = {}".format(item_description)
+            cursor.execute(query)
+        except Exception:
+            raise NoConnection
+        else:
+            result = cursor.fetchall()
+            return result
+        finally:
+            if db_connection:
+                db_connection.close()
+
+    @staticmethod
+    def show_user_info(user_id):
+        try:
+            db_connection = connect_to_db()
+            cursor = db_connection.cursor()
+            query = "SELECT user_id, username, password, home_town FROM users WHERE user_id = {}".format(user_id)
+            # This query will have to be changed to the database naming and structure
+            cursor.execute(query)
+        except Exception:
+            raise NoConnection
+        else:
+            result = cursor.fetchall()
+            return result
+            # I think this will return a dict?
+        finally:
+            if db_connection:
+                db_connection.close()
+
     def get_friend_user_id(friend_id):
         try:
             db_connection = connect_to_db()
@@ -116,6 +166,7 @@ class DBSearch:
             if db_connection:
                 db_connection.close()
 
+
     def check_availability(item_id):
         try:
             db_connection = connect_to_db()
@@ -135,7 +186,5 @@ class DBSearch:
                 return "This item is ready to be shared with you"
             else:
                 return "This item is not available to share"
-
-
 
 

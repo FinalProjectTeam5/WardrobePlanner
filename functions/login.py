@@ -5,13 +5,13 @@ from db_utils import DBSearch
 def sign_up():
     username = get_new_username()
     password = get_new_password()
-    city = get_city()
     user_dict = {
         "username": username,
-        "password": password,
-        "city": city
+        "password": password
     }
-    return user_dict
+    DBSearch.create_new_user(user_dict["username"], user_dict["password"])
+    print("Created a new user!")
+    return login()
 
 
 def get_new_username():
@@ -38,13 +38,13 @@ def get_new_password():
         return password
 
 
-def get_city():
-    city = input("Your closest big city: ")
-    if len(city) < 2 or len(city) > 20:
+def get_home_town():
+    home_town = input("Your closest big city: ")
+    if len(home_town) < 2 or len(home_town) > 20:
         print("Sorry, city name should be between 2 and 20 characters long.\n Try again.")
-        return get_city()
+        return get_home_town()
     else:
-        return city
+        return home_town
 
 
 def login():
@@ -54,8 +54,7 @@ def login():
         password = input("Your password: ")
         if DBSearch.all_check(username, password):
             print("You're signed in!")
-            # Here's going to be a return of a main menu function or user dashboard or sth
-            pass
+            return DBSearch.show_user_info(username)
         else:
             print("That's an incorrect password. Try again: ")
             return login()
@@ -63,3 +62,7 @@ def login():
         print("You don't have an account here yet. Register here: ")
         return sign_up()
 
+
+def show_user_id(username):
+    user_id = DBSearch.get_user_id(username)
+    return user_id
