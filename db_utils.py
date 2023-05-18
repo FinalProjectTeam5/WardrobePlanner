@@ -222,3 +222,72 @@ class DBSearch:
             count = result
             print("You have {} items in your wardrobe that are dirty.".format(count))
             return "You have {} items in your wardrobe that are dirty.".format(count)
+
+
+
+
+"""Functions below are just drafts for your feedback and need to be revised please"""
+
+
+    # 1. first we ask input of mood/occasion/date:
+
+    def ask_input():
+        input_list = []
+        mood = input(
+        "What are you feeling like today? Choose one of the options: serious / cheerful / romantic / serious / neutral")
+
+        occasion = input("What's the occasion? Choose one of the options: work / home / sport / date / cleaning / party")
+
+        date = input("Input the date you want to choose the outfit for (YYYY-MM-DD format")
+
+        input_list.append(mood)
+        input_list.append(occasion)
+        input_list.append(date)
+
+        return input_list
+
+    # 2. a separate function to create a weather tag.
+    # Giving the tag after input of date and connecting to API?
+
+    #def create_weather_tag():
+        #input = ask_input()
+        #date = input[2]
+
+        #then connect to API and get result of the apparent max temperature.
+        # in the end, give output:
+        # if temperature < 0, weather_tag = "freezing"
+        #elif temperature >=0 and temperature < 10, weather_tag = "mild'
+        #.....
+
+    #3. thanks to 2 functions above we have all the tags and can run a search in our wardrobe
+    # and wardrobes of everybody who shares clothes with us:
+
+    def search_clothes(weather_tag, occasion_tag, mood_tag, user_id):
+        try:
+            db_connection = connect_to_db()
+            cursor = db_connection.cursor()
+            query = """SELECT c.item_description, c.item_ID, o.owner_ID
+                           FROM clothes AS c
+                           INNER JOIN availability_status AS a ON c.item_ID = a.item_ID
+                           INNER JOIN ownership AS o ON c.item_id = o.item_id
+                           WHERE a.item_status = 'available'
+                           AND c.weather_tag = %s
+                           AND c.occasion_tag = %s
+                           AND c.mood_tag = %s
+                           AND c.item_id IN (
+                               SELECT o.item_id
+                               FROM ownership AS o
+                               WHERE o.owner_id IN (
+                                   SELECT f.user_ID
+                                   FROM friends AS f
+                                   WHERE f.friend_ID = %s
+                               )
+                           )"""
+            cursor.execute(query, (weather_tag, occasion_tag, mood_tag, user_id))
+            result = cursor.fetchall()
+            print("These are all items that are matching your search criteria:")
+            for item in result:
+                print(item)
+            return result
+        except Exception:
+            raise NoConnection
