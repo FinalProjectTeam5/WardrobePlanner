@@ -1,5 +1,5 @@
 import search_clothes as search
-import login as login
+import login as loginFunction
 import user_dashboard as dashboard
 from db_utils import DBSearch as DB
 
@@ -58,8 +58,12 @@ class Item:
 def dashboard(account):
 
     user = account
+    
+    # We use the dashboard function to get the user to tell us what they want
     dashboard_choice = dashboard.user_dashboard_choice()
-
+    
+    # Depending on user choice we'll go into further sub-dashboards or show results, 
+    # after completing a sub-function the user is taken back to the beggining of the dashboard function
     if dashboard_choice == 1:
         # Show user info
         user_info = DB.show_user_info(user.user_id)
@@ -83,11 +87,14 @@ def dashboard(account):
 def main():
     # We create the object of user with all None attributes
     user = User
-
-    user_data = login.login()
-
+    
+    # We use the login function from login file to get user data
+    user_data = login.loginFunction()
+    
+    # We use user_data to change the user object attributes
     user.login(user_data["user_id"], user_data["username"], user_data["password"], user_data["home_town"])
-
+    
+    # We redirect user to a dashboard function, in which user can interact with theur wardrobe
     return dashboard(user)
 
 
