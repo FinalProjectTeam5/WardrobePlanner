@@ -1,6 +1,6 @@
 import search_clothes as search
-import login as loginFunction
-import user_dashboard as dashboard
+import login as login_function
+import user_dashboard as dashboard_function
 from db_utils import DBSearch as DB
 
 
@@ -60,10 +60,10 @@ def dashboard(account):
     user = account
     
     # We use the dashboard function to get the user to tell us what they want
-    dashboard_choice = dashboard.user_dashboard_choice()
+    dashboard_choice = dashboard_function.user_dashboard_choice()
     
     # Depending on user choice we'll go into further sub-dashboards or show results, 
-    # after completing a sub-function the user is taken back to the beggining of the dashboard function
+    # after completing a sub-function the user is taken back to the beginning of the dashboard function
     if dashboard_choice == 1:
         # Show user info
         user_info = DB.show_user_info(user.user_id)
@@ -74,12 +74,35 @@ def dashboard(account):
         # The wardrobe search function will be called here
 
     elif dashboard_choice == 3:
-        # Manage wardrobe function will be called here
+        # Managing the wardrobe
+        sub_dashboard_3_choice = dashboard_function.sub_dashboard_option_3()
+
+        if sub_dashboard_3_choice == 1:
+        # Add items to wardrobe
+
+        elif sub_dashboard_3_choice == 2:
+        # Delete items
+
+        elif sub_dashboard_3_choice == 3:
+        # Do laundry
+
 
     elif dashboard_choice == 4:
-        # Change status of all clothes to available
+        # Managing friends
+        sub_dashboard_4_choice = dashboard_function.sub_dashboard_option_4()
+
+        if sub_dashboard_4_choice == 1:
+        # Add friends
+
+        elif sub_dashboard_4_choice == 2:
+        # Delete friends
+
+        elif sub_dashboard_4_choice == 3:
+        # Show friends
+
 
     elif dashboard_choice == 5:
+        # Exits the dashboard and returns to main; can log in again
         user.logout()
         return main()
 
@@ -89,12 +112,12 @@ def main():
     user = User
     
     # We use the login function from login file to get user data
-    user_data = login.loginFunction()
+    user_data = login_function.login()
     
-    # We use user_data to change the user object attributes
+    # We use user_data to change the user object attributes, gonna have to change the home_town part
     user.login(user_data["user_id"], user_data["username"], user_data["password"], user_data["home_town"])
     
-    # We redirect user to a dashboard function, in which user can interact with theur wardrobe
+    # We redirect user to a dashboard function, in which user can interact with their wardrobe
     return dashboard(user)
 
 
