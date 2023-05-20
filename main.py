@@ -94,21 +94,21 @@ def dashboard(account):
 
         if sub_dashboard_4_choice == 1:
         # Add friends
-            friend_added = friend_function.add_friend()
+            friend_added = friends_function.add_friend()
             print(friend_added)
             return dashboard(user)
 
         elif sub_dashboard_4_choice == 2:
         # Delete friends
-            friend_deleted = friend_function.delete_friend()
+            friend_deleted = friends_function.delete_friend()
             print(friend_deleted)
             return dashboard(user)
 
         elif sub_dashboard_4_choice == 3:
         # Show friends
-            friend_list = friend_function.show_friend_list()
+            friend_list = friends_function.show_friend_list()
             print(friend_list)
-            return dahsboard(user)
+            return dashboard(user)
 
 
     elif dashboard_choice == 5:
