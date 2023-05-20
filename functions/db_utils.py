@@ -11,8 +11,8 @@ def connect_to_db():
         host=HOST,
         user=USER,
         password=PASSWORD,
-        auth_plugin="[our database] password",
-        database="[our database]"
+        auth_plugin="mysql_native_password",
+        database="wardrobe_planner"
     )
     return connection
 
@@ -24,7 +24,7 @@ class DBSearch:
         try:
             db_connection = connect_to_db()
             cursor = db_connection.cursor()
-            query = "SELECT user_name FROM users WHERE user_id = {}".format(username)
+            query = "placeholder".format(username)
             cursor.execute(query)
         except Exception:
             raise NoConnection
@@ -43,7 +43,7 @@ class DBSearch:
         try:
             db_connection = connect_to_db()
             cursor = db_connection.cursor()
-            query = "SELECT user_password FROM users WHERE user_name = {}".format(username)
+            query = "placeholder".format(username)
             cursor.execute(query)
         except Exception:
             raise NoConnection
@@ -62,7 +62,7 @@ class DBSearch:
         try:
             db_connection = connect_to_db()
             cursor = db_connection.cursor()
-            query = "INSERT INTO users (user_name, user_password) VALUES ({}, {})".format(username, password)
+            query = "placeholder".format(username, password)
             cursor.execute(query)
         except Exception:
             raise NoConnection
@@ -77,7 +77,7 @@ class DBSearch:
         try:
             db_connection = connect_to_db()
             cursor = db_connection.cursor()
-            query = "SELECT user_id FROM users WHERE user_name = {}".format(username)
+            query = "placeholder".format(username)
             cursor.execute(query)
         except Exception:
             raise NoConnection
@@ -93,7 +93,7 @@ class DBSearch:
         try:
             db_connection = connect_to_db()
             cursor = db_connection.cursor()
-            query = "SELECT item_id FROM clothes WHERE item_description = {}".format(item_description)
+            query = "placeholder".format(item_description)
             cursor.execute(query)
         except Exception:
             raise NoConnection
@@ -109,7 +109,7 @@ class DBSearch:
         try:
             db_connection = connect_to_db()
             cursor = db_connection.cursor()
-            query = "SELECT user_id, user_name, user_password FROM users WHERE user_id = {}".format(user_id)
+            query = "placeholder".format(user_id)
             # This query will have to be changed to the database naming and structure
             cursor.execute(query)
         except Exception:
@@ -122,6 +122,7 @@ class DBSearch:
             if db_connection:
                 db_connection.close()
 
+    @staticmethod
     def get_friend_user_id(friend_id):
         try:
             db_connection = connect_to_db()
@@ -138,6 +139,7 @@ class DBSearch:
             if db_connection:
                 db_connection.close()
 
+    @staticmethod
     def add_to_friend_list(user_id, friend_id):
         try:
             db_connection = connect_to_db()
@@ -152,6 +154,7 @@ class DBSearch:
             if db_connection:
                 db_connection.close()
 
+    @staticmethod
     def delete_from_friend_list(friend_id):
         try:
             db_connection = connect_to_db()
@@ -166,7 +169,7 @@ class DBSearch:
             if db_connection:
                 db_connection.close()
 
-
+    @staticmethod
     def check_availability(item_id):
         try:
             db_connection = connect_to_db()
@@ -187,6 +190,7 @@ class DBSearch:
             else:
                 return "This item is not available to share"
 
+    @staticmethod
     def show_count_of_clothes_available(user_id):
         try:
             db_connection = connect_to_db()
@@ -205,6 +209,7 @@ class DBSearch:
             print("You have {} items available in your wardrobe.".format(count))
             return "You have {} items available in your wardrobe.".format(count)
 
+    @staticmethod
     def show_count_of_clothes_dirty(user_id):
         try:
             db_connection = connect_to_db()
@@ -223,14 +228,7 @@ class DBSearch:
             print("You have {} items in your wardrobe that are dirty.".format(count))
             return "You have {} items in your wardrobe that are dirty.".format(count)
 
-
-
-
-"""Functions below are just drafts for your feedback and need to be revised please"""
-
-
-    # 1. first we ask input of mood/occasion/date:
-
+    @staticmethod
     def ask_input():
         input_list = []
         mood = input(
@@ -246,52 +244,37 @@ class DBSearch:
 
         return input_list
 
-    # 2. a separate function to create a weather tag.
-    # Giving the tag after input of date and connecting to API?
-
-    #def create_weather_tag():
-        #input = ask_input()
-        #date = input[2]
-
-        #then connect to API and get result of the apparent max temperature.
-        # in the end, give output:
-        # if temperature < 0, weather_tag = "freezing"
-        #elif temperature >=0 and temperature < 10, weather_tag = "mild'
-        #.....
-
-    #3. thanks to 2 functions_nope above we have all the tags and can run a search in our wardrobe
-    # and wardrobes of everybody who shares clothes with us:
-
-def search_clothes(weather_tag, occasion_tag, mood_tag, user_id):
-    try:
-        db_connection = connect_to_db()
-        cursor = db_connection.cursor()
-        query = """SELECT c.item_description, c.item_ID, o.owner_ID
-                       FROM clothes AS c
-                       INNER JOIN availability_status AS a ON c.item_ID = a.item_ID
-                       INNER JOIN ownership AS o ON c.item_id = o.item_id
-                       WHERE a.item_status = 'available'
-                       AND c.weather_tag = %s
-                       AND c.occasion_tag = %s
-                       AND c.mood_tag = %s
-                       AND c.item_id IN (
-                           SELECT o.item_id
-                           FROM ownership AS o
-                           WHERE o.owner_id IN (
-                               SELECT f.user_ID
-                               FROM friends AS f
-                               WHERE f.friend_ID = %s
-                           )
-                       )"""
-        cursor.execute(query, (weather_tag, occasion_tag, mood_tag, user_id))
-        result = cursor.fetchall()
-        print("These are all items that are matching your search criteria:")
-        for item in result:
-            item_description = item[0]
-            item_id = item[1]
-            owner_id = item[2]
-            output = "'{}' - item number {} belonging to user {}".format(item_description, item_id, owner_id)
-            print(output)
-        return result
-    except Exception:
-        raise NoConnection
+    @staticmethod
+    def search_clothes(weather_tag, occasion_tag, mood_tag, user_id):
+        try:
+            db_connection = connect_to_db()
+            cursor = db_connection.cursor()
+            query = """SELECT c.item_description, c.item_ID, o.owner_ID
+                           FROM clothes AS c
+                           INNER JOIN availability_status AS a ON c.item_ID = a.item_ID
+                           INNER JOIN ownership AS o ON c.item_id = o.item_id
+                           WHERE a.item_status = 'available'
+                           AND c.weather_tag = %s
+                           AND c.occasion_tag = %s
+                           AND c.mood_tag = %s
+                           AND c.item_id IN (
+                               SELECT o.item_id
+                               FROM ownership AS o
+                               WHERE o.owner_id IN (
+                                   SELECT f.user_ID
+                                   FROM friends AS f
+                                   WHERE f.friend_ID = %s
+                               )
+                           )"""
+            cursor.execute(query, (weather_tag, occasion_tag, mood_tag, user_id))
+            result = cursor.fetchall()
+            print("These are all items that are matching your search criteria:")
+            for item in result:
+                item_description = item[0]
+                item_id = item[1]
+                owner_id = item[2]
+                output = "'{}' - item number {} belonging to user {}".format(item_description, item_id, owner_id)
+                print(output)
+            return result
+        except Exception:
+            raise NoConnection

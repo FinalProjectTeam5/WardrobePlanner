@@ -18,7 +18,7 @@ def user_dashboard_choice():
 
 # sub_dashboards?
 
-def sub_dashboard_option_3():
+def sub_dashboard_manage_wardrobe():
     print("1. Add Items To Your Wardrobe \n"
           "2. Delete Items From Your Wardrobe \n"
           "3. Do Laundry")
@@ -34,7 +34,7 @@ def sub_dashboard_option_3():
         return user_dashboard_choice()
 
 
-def sub_dashboard_option_4():
+def sub_dashboard_manage_friends():
     print("1. Add Friends \n"
           "2. Delete Friends \n"
           "3. Show Friends")
