@@ -122,6 +122,7 @@ class DBSearch:
             if db_connection:
                 db_connection.close()
 
+    @staticmethod
     def get_friend_user_id(friend_id):
         try:
             db_connection = connect_to_db()
@@ -138,6 +139,7 @@ class DBSearch:
             if db_connection:
                 db_connection.close()
 
+    @staticmethod
     def add_to_friend_list(user_id, friend_id):
         try:
             db_connection = connect_to_db()
@@ -152,6 +154,7 @@ class DBSearch:
             if db_connection:
                 db_connection.close()
 
+    @staticmethod
     def delete_from_friend_list(friend_id):
         try:
             db_connection = connect_to_db()
@@ -167,25 +170,23 @@ class DBSearch:
                 db_connection.close()
 
 
-    def check_availability(item_id):
+    @staticmethod
+    def get_friends_list(user_id):
         try:
             db_connection = connect_to_db()
             cursor = db_connection.cursor()
-            query = "SELECT item_status from availability_status WHERE item_id = {}".format(item_id)
+            #Need query to select all friends and show usernames
+            query = ""
             cursor.execute(query)
         except Exception:
             raise NoConnection
         else:
-            result = cursor.fetchall()
-            if result == "available":
-                db_connection = connect_to_db()
-                cursor = db_connection.cursor()
-                query = "UPDATE availability_status AS a SET a.item_status = 'taken' WHERE a.item_id = {}".format(
-                    item_id)
-                cursor.execute(query)
-                return "This item is ready to be shared with you"
-            else:
-                return "This item is not available to share"
+            db_connection.commit()
+        finally:
+            if db_connection:
+                db_connection.close()
+
+
 
     def show_count_of_clothes_available(user_id):
         try:

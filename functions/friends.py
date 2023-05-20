@@ -14,3 +14,8 @@ def delete_friend():
     friend_id = DBSearch.get_friend_user_id(friend_username)
     DBSearch.delete_from_friend_list(friend_id)
     return "{} has been deleted from your friend list.".format(friend_username)
+
+
+def show_friends_list(user_id):
+    friends_list = DBSearch.get_friends_list(user_id)
+    return "Here is a list of your friends to share with: {}".format(friends_list)

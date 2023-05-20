@@ -1,6 +1,7 @@
 import search_clothes as search
 import login as login_function
 import user_dashboard as dashboard_function
+import friends as friends_function
 from db_utils import DBSearch as DB
 
 
@@ -93,12 +94,21 @@ def dashboard(account):
 
         if sub_dashboard_4_choice == 1:
         # Add friends
+            friend_added = friend_function.add_friend()
+            print(friend_added)
+            return dashboard(user)
 
         elif sub_dashboard_4_choice == 2:
         # Delete friends
+            friend_deleted = friend_function.delete_friend()
+            print(friend_deleted)
+            return dashboard(user)
 
         elif sub_dashboard_4_choice == 3:
         # Show friends
+            friend_list = friend_function.show_friend_list()
+            print(friend_list)
+            return dahsboard(user)
 
 
     elif dashboard_choice == 5:
