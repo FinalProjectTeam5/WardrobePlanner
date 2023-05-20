@@ -123,11 +123,11 @@ class DBSearch:
                 db_connection.close()
 
     @staticmethod
-    def get_friend_user_id(friend_id):
+    def get_friend_user_id(friend_username):
         try:
             db_connection = connect_to_db()
             cursor = db_connection.cursor()
-            query = "SELECT user_ID from users WHERE user_name = {}".format(friend_id)
+            query = "SELECT user_ID from users WHERE user_name = {}".format(friend_username)
             cursor.execute(query)
         except Exception:
             raise NoConnection
@@ -155,11 +155,11 @@ class DBSearch:
                 db_connection.close()
 
     @staticmethod
-    def delete_from_friend_list(friend_id):
+    def delete_from_friend_list(friend_id, user_id):
         try:
             db_connection = connect_to_db()
             cursor = db_connection.cursor()
-            query = "DELETE FROM friends AS f WHERE f.friend_id = {})".format(friend_id)
+            query = "DELETE FROM friends AS f WHERE f.friend_id = {} AND f.user_id = {})".format(friend_id, user_id)
             cursor.execute(query)
         except Exception:
             raise NoConnection
@@ -170,25 +170,25 @@ class DBSearch:
                 db_connection.close()
 
     @staticmethod
-    def check_availability(item_id):
+    def get_friends_list(user_id):
         try:
             db_connection = connect_to_db()
             cursor = db_connection.cursor()
-            query = "SELECT item_status from availability_status WHERE item_id = {}".format(item_id)
+            #Need to add user id in
+            query = "SELECT u1.user_id, u1.user_name FROM users AS u1" \
+                    "INNER JOIN friends AS f ON u1.user_id = f.user_id" \
+                    "INNER JOIN users AS u2 ON f.friend_id = u2.user_id" \
+                    "WHERE u2.user_id in (1)" \
+                    "AND u1.user_id <> 1" \
+                    "ORDER BY u2.user_id;"
             cursor.execute(query)
         except Exception:
             raise NoConnection
         else:
-            result = cursor.fetchall()
-            if result == "available":
-                db_connection = connect_to_db()
-                cursor = db_connection.cursor()
-                query = "UPDATE availability_status AS a SET a.item_status = 'taken' WHERE a.item_id = {}".format(
-                    item_id)
-                cursor.execute(query)
-                return "This item is ready to be shared with you"
-            else:
-                return "This item is not available to share"
+            db_connection.commit()
+        finally:
+            if db_connection:
+                db_connection.close()
 
     @staticmethod
     def show_count_of_clothes_available(user_id):
