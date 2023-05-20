@@ -259,7 +259,7 @@ class DBSearch:
         #elif temperature >=0 and temperature < 10, weather_tag = "mild'
         #.....
 
-    #3. thanks to 2 functions above we have all the tags and can run a search in our wardrobe
+    #3. thanks to 2 functions_nope above we have all the tags and can run a search in our wardrobe
     # and wardrobes of everybody who shares clothes with us:
 
 def search_clothes(weather_tag, occasion_tag, mood_tag, user_id):

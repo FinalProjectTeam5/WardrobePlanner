@@ -1,7 +1,6 @@
-import search_clothes as search
-import login as login_function
-import user_dashboard as dashboard_function
-from db_utils import DBSearch as DB
+from functions import search_clothes as search
+from functions import login as login_function
+from functions.db_utils import DBSearch as DB
 
 
 class User:
@@ -71,6 +70,7 @@ def dashboard(account):
         return dashboard(user)
 
     elif dashboard_choice == 2:
+        pass
         # The wardrobe search function will be called here
 
     elif dashboard_choice == 3:
@@ -78,12 +78,16 @@ def dashboard(account):
         sub_dashboard_3_choice = dashboard_function.sub_dashboard_option_3()
 
         if sub_dashboard_3_choice == 1:
+            pass
         # Add items to wardrobe
 
+
         elif sub_dashboard_3_choice == 2:
+            pass
         # Delete items
 
         elif sub_dashboard_3_choice == 3:
+            pass
         # Do laundry
 
 
@@ -92,12 +96,15 @@ def dashboard(account):
         sub_dashboard_4_choice = dashboard_function.sub_dashboard_option_4()
 
         if sub_dashboard_4_choice == 1:
+            pass
         # Add friends
 
         elif sub_dashboard_4_choice == 2:
+            pass
         # Delete friends
 
         elif sub_dashboard_4_choice == 3:
+            pass
         # Show friends
 
 
