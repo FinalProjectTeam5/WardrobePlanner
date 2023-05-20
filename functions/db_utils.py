@@ -123,6 +123,14 @@ class DBSearch:
                 db_connection.close()
 
     @staticmethod
+    def set_hometown():
+        pass
+
+    @staticmethod
+    def get_hometown():
+        pass
+
+    @staticmethod
     def get_friend_user_id(friend_id):
         try:
             db_connection = connect_to_db()
@@ -228,35 +236,18 @@ class DBSearch:
             print("You have {} items in your wardrobe that are dirty.".format(count))
             return "You have {} items in your wardrobe that are dirty.".format(count)
 
-    @staticmethod
-    def ask_input():
-        input_list = []
-        mood = input(
-        "What are you feeling like today? Choose one of the options: serious / cheerful / romantic / serious / neutral")
-
-        occasion = input("What's the occasion? Choose one of the options: work / home / sport / date / cleaning / party")
-
-        date = input("Input the date you want to choose the outfit for (YYYY-MM-DD format")
-
-        input_list.append(mood)
-        input_list.append(occasion)
-        input_list.append(date)
-
-        return input_list
 
     @staticmethod
-    def search_clothes(weather_tag, occasion_tag, mood_tag, user_id):
+    def search_clothes(tags, user_id):
         try:
             db_connection = connect_to_db()
             cursor = db_connection.cursor()
-            query = """SELECT c.item_description, c.item_ID, o.owner_ID
+            cursor.execute("""SELECT c.item_description, c.item_ID, o.owner_ID
                            FROM clothes AS c
                            INNER JOIN availability_status AS a ON c.item_ID = a.item_ID
                            INNER JOIN ownership AS o ON c.item_id = o.item_id
                            WHERE a.item_status = 'available'
-                           AND c.weather_tag = %s
-                           AND c.occasion_tag = %s
-                           AND c.mood_tag = %s
+                           %s
                            AND c.item_id IN (
                                SELECT o.item_id
                                FROM ownership AS o
@@ -265,8 +256,7 @@ class DBSearch:
                                    FROM friends AS f
                                    WHERE f.friend_ID = %s
                                )
-                           )"""
-            cursor.execute(query, (weather_tag, occasion_tag, mood_tag, user_id))
+                           )""", [tags, user_id])
             result = cursor.fetchall()
             print("These are all items that are matching your search criteria:")
             for item in result:

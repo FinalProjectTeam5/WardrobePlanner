@@ -2,6 +2,7 @@ from functions import search_clothes as search
 from functions import login as login_function
 from functions.db_utils import DBSearch as DB
 from functions import user_dashboard as dashboard_function
+from functions import tag_prompts as choosing_tags
 
 
 class User:
@@ -71,8 +72,22 @@ def dashboard(account):
         return dashboard(user)
 
     elif dashboard_choice == 2:
-        pass
+        sub_dashboard_2_choice = dashboard_function.sub_dashboard_search()
+        if sub_dashboard_2_choice == 1:
+            tags = ""
+            search_results = DB.search_clothes(tags, user.user_id)
+            print(search_results)
+        elif sub_dashboard_2_choice == 2:
+            tags = choosing_tags.formatting_tags()
+            search_results = DB.search_clothes(tags, user.user_id)
+            print(search_results)
+
+
+
         # The wardrobe search function will be called here
+        # AND c.weather_tag = %s
+        # AND c.occasion_tag = %s
+        # AND c.mood_tag =
 
     elif dashboard_choice == 3:
         # Managing the wardrobe
