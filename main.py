@@ -3,6 +3,7 @@ from functions import login as login_function
 from functions.db_utils import DBSearch as DB
 from functions import user_dashboard as dashboard_function
 from functions import friends as friends_function
+from functions import manage_wardrobe as manage_wardrobe_function
 
 
 class User:
@@ -80,12 +81,15 @@ def dashboard(account):
         sub_dashboard_3_choice = dashboard_function.sub_dashboard_manage_wardrobe()
 
         if sub_dashboard_3_choice == 1:
-            pass
+            item_added = manage_wardrobe_function.add_item()
+            print(item_added)
+            return dashboard(user)
         # Add items to wardrobe
 
-
         elif sub_dashboard_3_choice == 2:
-            pass
+            item_deleted = manage_wardrobe_function.delete_item()
+            print(item_deleted)
+            return dashboard(user)
         # Delete items
 
         elif sub_dashboard_3_choice == 3:
@@ -110,7 +114,7 @@ def dashboard(account):
         # Delete friends
 
         elif sub_dashboard_4_choice == 3:
-            friend_list = friends_function.show_friend_list()
+            friend_list = friends_function.show_friends_list()
             print(friend_list)
             return dashboard(user)
         # Show friends

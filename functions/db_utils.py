@@ -278,3 +278,36 @@ class DBSearch:
             return result
         except Exception:
             raise NoConnection
+
+    @staticmethod
+    def add_item_to_wardrobe(item_type, item_description, weather_tag, occasion_tag, mood_tag):
+        try:
+            db_connection = connect_to_db()
+            cursor = db_connection.cursor()
+            query = "INSERT INTO clothes (item_type, item_description, weather_tag, occasion_tag, mood_tag) " \
+                    "VALUES ({},{},{},{},{})".format(item_type, item_description, weather_tag, occasion_tag, mood_tag)
+            cursor.execute(query)
+        except Exception:
+            raise NoConnection
+        else:
+            db_connection.commit()
+        finally:
+            if db_connection:
+                db_connection.close()
+
+
+    @staticmethod
+    def delete_item_from_wardrobe(item_description):
+        try:
+            db_connection = connect_to_db()
+            cursor = db_connection.cursor()
+            #Need delete item query
+            query = "placeholder"
+            cursor.execute(query)
+        except Exception:
+            raise NoConnection
+        else:
+            db_connection.commit()
+        finally:
+            if db_connection:
+                db_connection.close()
