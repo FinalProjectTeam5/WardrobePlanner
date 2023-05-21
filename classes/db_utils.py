@@ -1,13 +1,12 @@
-import mysql.connector as mysql
-from config import USER, PASSWORD, HOST
-
+import mysql.connector
+from WardrobePlanner.classes.config import USER, PASSWORD, HOST
 
 class NoConnection(Exception):
     pass
 
 
 def connect_to_db():
-    connection = mysql.connect(
+    connection = mysql.connector.connect(
         host=HOST,
         user=USER,
         password=PASSWORD,
@@ -43,7 +42,7 @@ class DBSearch:
         try:
             db_connection = connect_to_db()
             cursor = db_connection.cursor()
-            query = "placeholder".format(username)
+            query = "SELECT user_password FROM users WHERE user_name = {}".format(username)
             cursor.execute(query)
         except Exception:
             raise NoConnection
@@ -62,7 +61,7 @@ class DBSearch:
         try:
             db_connection = connect_to_db()
             cursor = db_connection.cursor()
-            query = "placeholder".format(username, password)
+            query = "INSERT INTO users (user_name, user_password) VALUES ({}, {})".format(username, password)
             cursor.execute(query)
         except Exception:
             raise NoConnection
@@ -77,7 +76,7 @@ class DBSearch:
         try:
             db_connection = connect_to_db()
             cursor = db_connection.cursor()
-            query = "placeholder".format(username)
+            query = "SELECT user_id FROM users WHERE user_name = {}".format(username)
             cursor.execute(query)
         except Exception:
             raise NoConnection
@@ -93,7 +92,7 @@ class DBSearch:
         try:
             db_connection = connect_to_db()
             cursor = db_connection.cursor()
-            query = "placeholder".format(item_description)
+            query = "SELECT item_id FROM clothes WHERE item_description = {}".format(item_description)
             cursor.execute(query)
         except Exception:
             raise NoConnection
@@ -109,8 +108,8 @@ class DBSearch:
         try:
             db_connection = connect_to_db()
             cursor = db_connection.cursor()
-            query = "placeholder".format(user_id)
-            # This query will have to be changed to the database naming and structure
+            query = "SELECT user_id, user_name, user_password FROM users WHERE user_id = {}".format(user_id)
+
             cursor.execute(query)
         except Exception:
             raise NoConnection
@@ -123,19 +122,11 @@ class DBSearch:
                 db_connection.close()
 
     @staticmethod
-    def set_hometown():
-        pass
-
-    @staticmethod
-    def get_hometown():
-        pass
-
-    @staticmethod
-    def get_friend_user_id(friend_id):
+    def get_friend_user_id(friend_username):
         try:
             db_connection = connect_to_db()
             cursor = db_connection.cursor()
-            query = "SELECT user_ID from users WHERE user_name = {}".format(friend_id)
+            query = "SELECT user_ID from users WHERE user_name = {}".format(friend_username)
             cursor.execute(query)
         except Exception:
             raise NoConnection
@@ -163,11 +154,11 @@ class DBSearch:
                 db_connection.close()
 
     @staticmethod
-    def delete_from_friend_list(friend_id):
+    def delete_from_friend_list(friend_id, user_id):
         try:
             db_connection = connect_to_db()
             cursor = db_connection.cursor()
-            query = "DELETE FROM friends AS f WHERE f.friend_id = {})".format(friend_id)
+            query = "DELETE FROM friends AS f WHERE f.friend_id = {} AND f.user_id = {})".format(friend_id, user_id)
             cursor.execute(query)
         except Exception:
             raise NoConnection
@@ -178,25 +169,25 @@ class DBSearch:
                 db_connection.close()
 
     @staticmethod
-    def check_availability(item_id):
+    def get_friends_list(user_id):
         try:
             db_connection = connect_to_db()
             cursor = db_connection.cursor()
-            query = "SELECT item_status from availability_status WHERE item_id = {}".format(item_id)
+            # Need to add user id in
+            query = "SELECT u1.user_id, u1.user_name FROM users AS u1" \
+                    "INNER JOIN friends AS f ON u1.user_id = f.user_id" \
+                    "INNER JOIN users AS u2 ON f.friend_id = u2.user_id" \
+                    "WHERE u2.user_id in (1)" \
+                    "AND u1.user_id <> 1" \
+                    "ORDER BY u2.user_id;"
             cursor.execute(query)
         except Exception:
             raise NoConnection
         else:
-            result = cursor.fetchall()
-            if result == "available":
-                db_connection = connect_to_db()
-                cursor = db_connection.cursor()
-                query = "UPDATE availability_status AS a SET a.item_status = 'taken' WHERE a.item_id = {}".format(
-                    item_id)
-                cursor.execute(query)
-                return "This item is ready to be shared with you"
-            else:
-                return "This item is not available to share"
+            db_connection.commit()
+        finally:
+            if db_connection:
+                db_connection.close()
 
     @staticmethod
     def show_count_of_clothes_available(user_id):
@@ -213,9 +204,9 @@ class DBSearch:
             raise NoConnection
         else:
             result = cursor.fetchall()
-            count = result
-            print("You have {} items available in your wardrobe.".format(count))
-            return "You have {} items available in your wardrobe.".format(count)
+            count = "You have {} items in your wardrobe that are available.".format(result)
+            # print(count)
+            return count
 
     @staticmethod
     def show_count_of_clothes_dirty(user_id):
@@ -223,19 +214,17 @@ class DBSearch:
             db_connection = connect_to_db()
             cursor = db_connection.cursor()
             query = """SELECT COUNT(*) AS count_available_items FROM availability_status AS a 
-            JOIN ownership AS o ON a.item_id = o.item_id 
-            WHERE a.item_status = 'dirty' 
-            AND o.owner_id = {}""".format(user_id)
-
+               JOIN ownership AS o ON a.item_id = o.item_id 
+               WHERE a.item_status = 'dirty' 
+               AND o.owner_id = {}""".format(user_id)
             cursor.execute(query)
         except Exception:
             raise NoConnection
         else:
             result = cursor.fetchall()
-            count = result
-            print("You have {} items in your wardrobe that are dirty.".format(count))
-            return "You have {} items in your wardrobe that are dirty.".format(count)
-
+            count = "You have {} items in your wardrobe that are dirty.".format(result)
+            #print(count)
+            return count
 
     @staticmethod
     def search_clothes(tags, user_id):
@@ -243,20 +232,20 @@ class DBSearch:
             db_connection = connect_to_db()
             cursor = db_connection.cursor()
             cursor.execute("""SELECT c.item_description, c.item_ID, o.owner_ID
-                           FROM clothes AS c
-                           INNER JOIN availability_status AS a ON c.item_ID = a.item_ID
-                           INNER JOIN ownership AS o ON c.item_id = o.item_id
-                           WHERE a.item_status = 'available'
-                           %s
-                           AND c.item_id IN (
-                               SELECT o.item_id
-                               FROM ownership AS o
-                               WHERE o.owner_id IN (
-                                   SELECT f.user_ID
-                                   FROM friends AS f
-                                   WHERE f.friend_ID = %s
-                               )
-                           )""", [tags, user_id])
+                                       FROM clothes AS c
+                                       INNER JOIN availability_status AS a ON c.item_ID = a.item_ID
+                                       INNER JOIN ownership AS o ON c.item_id = o.item_id
+                                       WHERE a.item_status = 'available'
+                                       %s
+                                       AND c.item_id IN (
+                                           SELECT o.item_id
+                                           FROM ownership AS o
+                                           WHERE o.owner_id IN (
+                                               SELECT f.user_ID
+                                               FROM friends AS f
+                                               WHERE f.friend_ID = %s
+                                           )
+                                       )""", [tags, user_id])
             result = cursor.fetchall()
             print("These are all items that are matching your search criteria:")
             for item in result:
@@ -268,3 +257,36 @@ class DBSearch:
             return result
         except Exception:
             raise NoConnection
+
+    @staticmethod
+    def add_item_to_wardrobe(item_type, item_description, weather_tag, occasion_tag, mood_tag):
+        try:
+            db_connection = connect_to_db()
+            cursor = db_connection.cursor()
+            query = "INSERT INTO clothes (item_type, item_description, weather_tag, occasion_tag, mood_tag) " \
+                    "VALUES ({},{},{},{},{})".format(item_type, item_description, weather_tag, occasion_tag, mood_tag)
+            cursor.execute(query)
+        except Exception:
+            raise NoConnection
+        else:
+            db_connection.commit()
+        finally:
+            if db_connection:
+                db_connection.close()
+
+    @staticmethod
+    def delete_item_from_wardrobe(item_description):
+        try:
+            db_connection = connect_to_db()
+            cursor = db_connection.cursor()
+            # Need delete item query
+            query = "placeholder"
+            cursor.execute(query)
+        except Exception:
+            raise NoConnection
+        else:
+            db_connection.commit()
+        finally:
+            if db_connection:
+                db_connection.close()
+

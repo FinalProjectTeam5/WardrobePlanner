@@ -1,7 +1,7 @@
-from date_and_geolocation import check_city
-from date_and_geolocation import city_list_for_interface
-from date_and_geolocation import cleaning_up_results
-from date_and_geolocation import hometown_input_check
+from WardrobePlanner.functions.date_and_geolocation import check_city
+from WardrobePlanner.functions.date_and_geolocation import city_list_for_interface
+from WardrobePlanner.functions.date_and_geolocation import cleaning_up_results
+from WardrobePlanner.functions.date_and_geolocation import hometown_input_check
 
 
 def getting_hometown():

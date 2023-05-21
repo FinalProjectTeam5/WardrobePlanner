@@ -1,4 +1,4 @@
-from db_utils import DBSearch
+from WardrobePlanner.classes.db_utils import DBSearch
 # Mark the directories as Sources Root
 
 

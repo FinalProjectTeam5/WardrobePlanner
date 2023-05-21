@@ -1,4 +1,4 @@
-from api_requests import getting_temperature_today
+from WardrobePlanner.functions.api_requests import getting_temperature_today
 
 
 tags_dict = {"weather_tag": ["freezing", "cold", "mild", "warm", "hot"],

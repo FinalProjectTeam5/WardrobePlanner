@@ -1,4 +1,4 @@
-from db_utils import DBSearch
+from WardrobePlanner.classes.db_utils import DBSearch
 
 
 def show_item_id(item_description):

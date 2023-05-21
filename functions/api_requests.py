@@ -1,6 +1,6 @@
 import requests
-from db_utils import DBSearch
-from date_and_geolocation import getting_future_date
+from WardrobePlanner.classes.db_utils import DBSearch
+from WardrobePlanner.functions.date_and_geolocation import getting_future_date
 
 def formatting_today_request_link(location):
     return "https://api.open-meteo.com/v1/forecast?latitude={}&longitude={}&daily=apparent_temperature_max&forecast_days=1&timezone=auto".format(location[0], location[1])
