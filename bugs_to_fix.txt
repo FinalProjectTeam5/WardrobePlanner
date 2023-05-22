@@ -1,0 +1,3 @@
+1. during signup the user is asked for the username twice - where does it come from?
+2. bugs in tag prompts - wrong list indexes
+3. bugs in db utils - reformat the functions

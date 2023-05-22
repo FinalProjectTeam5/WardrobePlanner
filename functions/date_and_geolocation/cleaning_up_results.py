@@ -8,7 +8,7 @@ def rounding_up_lat_long(coordinates):
         rounded_coordinates.append(rounded_pair)
     return rounded_coordinates
 
-
+# to do: shorten the city name
 def eliminating_duplicates(array):
     duplicate_finder = []
     for item in array:
