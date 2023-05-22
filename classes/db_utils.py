@@ -167,8 +167,8 @@ class DBSearch:
             cursor.execute("""SELECT u1.user_id, u1.user_name FROM users AS u1" \
                     "INNER JOIN friends AS f ON u1.user_id = f.user_id" \
                     "INNER JOIN users AS u2 ON f.friend_id = u2.user_id" \
-                    "WHERE u2.user_id in (1)" \
-                    "AND u1.user_id <> 1" \
+                    "WHERE u2.user_id in (%s)" \
+                    "AND u1.user_id <> %s" \
                     "ORDER BY u2.user_id;""",
                            [user_id])
             result = cursor.fetchall()
