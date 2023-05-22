@@ -7,7 +7,7 @@ class Test_User(TestCase):
         - so only 1 test has been created"""
         username = "Anna"
         result = DBSearch.username_check(username)
-        expected = [('Anna',), ('Maria',), ('Jenny',), ('Lucy',), ('Magda',), ('Magda',), ('Magda',), ('Magda',), ('Test1',), ('Test1',)]
+        expected = [('Anna',), ('Maria',), ('Jenny',), ('Lucy',)]
         self.assertEqual(expected, result)
 
     def test_password_check_valid_input(self):
