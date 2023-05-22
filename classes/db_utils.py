@@ -279,3 +279,21 @@ class DBSearch:
             return result
         finally:
             cursor.close()
+
+    @staticmethod
+    def show_all_user_clothes(user_id):
+        try:
+            db_connection = connect_to_db()
+            cursor = db_connection.cursor()
+        except Exception:
+            raise NoConnection
+        else:
+            cursor.execute("""SELECT c.item_ID, c.item_description, a.item_status
+                            FROM clothes AS c
+                            JOIN ownership AS o ON c.item_ID = o.item_ID
+                            JOIN availability_status AS a ON c.item_ID = a.item_ID
+                            WHERE o.owner_ID = %s ;""", [user_id])
+            result = cursor.fetchall()
+            return result
+        finally:
+            cursor.close()
