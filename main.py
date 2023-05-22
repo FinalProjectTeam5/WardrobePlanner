@@ -6,8 +6,6 @@ from logo import logo
 
 
 def main():
-    # We create the object of user with all None attributes
-
 
     # Starting screen
     print(logo)
@@ -20,23 +18,22 @@ def main():
                 # We use the login function from login file to get user data
                 username = login()
                 user_data = DBSearch.show_user_info(username)
-                #print(user_data)
+                # print(user_data)
 
-                # We use user_data to change the user object attributes, gonna have to change the home_town part
+                # We use user_data to create a user object, gonna have to change the home_town part
                 user = User(user_data[0][0], user_data[0][1], user_data[0][2], "hometown")
-                #print(user.user_id, user.username)
+                # print(user.user_id, user.username)
                 break
             elif lets_start == "2":
+                # We use the signup function from login file to create a new user
                 sign_up()
-
-                break
+                #break
             elif lets_start == "3":
                 quit()
             else:
                 print("Please choose an option from the list. Try again.")
     except ValueError:
         print("Sorry that's not a number, try again!")
-
 
     # We redirect user to a dashboard function, in which user can interact with their wardrobe
     return dashboard(user)

@@ -63,6 +63,23 @@ class DBSearch:
             cursor.close()
 
     @staticmethod
+    def set_hometown(user_id, hometown, lat, long):
+        try:
+            db_connection = connect_to_db()
+            cursor = db_connection.cursor()
+        except Exception:
+            raise NoConnection
+        else:
+            cursor.execute("""INSERT INTO user_location (user_id, home_town, latitude, longitude) VALUES (%s, %s, %s, %s);""", [user_id, hometown, lat, long])
+            db_connection.commit()
+        finally:
+            cursor.close()
+
+    @staticmethod
+    def get_coordinates():
+        pass
+
+    @staticmethod
     def get_user_id(username):
         try:
             db_connection = connect_to_db()
@@ -70,8 +87,7 @@ class DBSearch:
         except Exception:
             raise NoConnection
         else:
-            query = "SELECT user_id FROM users WHERE user_name = {}".format(username)
-            cursor.execute(query)
+            cursor.execute("""SELECT user_id FROM users WHERE user_name = %s ;""", [username])
             result = cursor.fetchall()
             return result
         finally:

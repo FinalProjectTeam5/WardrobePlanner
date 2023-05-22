@@ -15,8 +15,10 @@ def sign_up():
     }
     print(user_dict)
     DBSearch.create_new_user(user_dict["username"], user_dict["password"])
+    user_id = DBSearch.get_user_id(username)[0][0]
+    DBSearch.set_hometown(user_id, user_dict["hometown"], user_dict["latitude"], user_dict["longitude"])
     print("New user created! You can start planning your wardrobe!")
-    return login()
+    return
 
 
 def get_new_username():
@@ -24,11 +26,18 @@ def get_new_username():
     if len(username) < 2 or len(username) > 20:
         print("Sorry, your username should be between 2 and 20 characters long.\n Try again.")
         return get_new_username()
-    elif DBSearch.username_check(username):
-        print("You already have an account here. Login here: ")
-        return login()
     else:
-        return username
+        results = DBSearch.username_check(username)
+        found_ya = False
+        for result in results:
+            if username == result[0]:
+                found_ya = True
+                break
+        if found_ya:
+            print("You already have an account here. Login here: ")
+            return login()
+        else:
+            return username
 
 
 def get_new_password():
@@ -70,6 +79,7 @@ def login():
         password_in_database = fetch_password(username)
         #print(password_in_database)
         if verify_password(password_given, password_in_database):
+            #print(username)
             return username
     else:
         try:
