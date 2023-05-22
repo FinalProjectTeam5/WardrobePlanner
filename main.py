@@ -17,7 +17,7 @@ def main():
             if lets_start == "1":
                 # We use the login function from login file to get user data
                 username = login()
-                user_data = DBSearch.show_user_info(username)
+                user_data = DBSearch.get_user_info(username)
                 # print(user_data)
 
                 # We use user_data to create a user object, gonna have to change the home_town part

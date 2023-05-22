@@ -17,8 +17,11 @@ def connect_to_db():
     return connection
 
 
+# to find the functions you can use keywords(login, sign up, items, statuses, friends) in ctrl + f
+
 class DBSearch:
 
+    # login
     @staticmethod
     def username_check(username):
         try:
@@ -50,6 +53,25 @@ class DBSearch:
             cursor.close()
 
     @staticmethod
+    def get_location():
+        pass
+
+    @staticmethod
+    def get_user_info(username):
+        try:
+            db_connection = connect_to_db()
+            cursor = db_connection.cursor()
+        except Exception:
+            raise NoConnection
+        else:
+            cursor.execute("""SELECT user_id, user_name, user_password FROM users WHERE user_name = %s ;""", [username])
+            result = cursor.fetchall()
+            return result
+        finally:
+            cursor.close()
+
+    # sign up
+    @staticmethod
     def create_new_user(username, password):
         try:
             db_connection = connect_to_db()
@@ -75,10 +97,8 @@ class DBSearch:
         finally:
             cursor.close()
 
-    @staticmethod
-    def get_coordinates():
-        pass
 
+    # is this function nescessary?
     @staticmethod
     def get_user_id(username):
         try:
@@ -93,35 +113,8 @@ class DBSearch:
         finally:
             cursor.close()
 
-    @staticmethod
-    def get_item_id(item_description):
-        try:
-            db_connection = connect_to_db()
-            cursor = db_connection.cursor()
-        except Exception:
-            raise NoConnection
-        else:
-            query = "SELECT item_id FROM clothes WHERE item_description = {}".format(item_description)
-            cursor.execute(query)
-            result = cursor.fetchall()
-            return result
-        finally:
-            cursor.close()
 
-    @staticmethod
-    def show_user_info(username):
-        try:
-            db_connection = connect_to_db()
-            cursor = db_connection.cursor()
-        except Exception:
-            raise NoConnection
-        else:
-            cursor.execute("""SELECT user_id, user_name, user_password FROM users WHERE user_name = %s ;""", [username])
-            result = cursor.fetchall()
-            return result
-        finally:
-            cursor.close()
-
+    # friends
     @staticmethod
     def get_friend_user_id(friend_username):
         try:
@@ -130,11 +123,9 @@ class DBSearch:
         except Exception:
             raise NoConnection
         else:
-            query = "SELECT user_ID from users WHERE user_name = {}".format(friend_username)
-            cursor.execute(query)
+            cursor.execute("""SELECT user_ID from users WHERE user_name = %s;""", [friend_username])
             result = cursor.fetchall()
-            user_id = result
-            return user_id
+            return result
         finally:
             cursor.close()
 
@@ -146,8 +137,7 @@ class DBSearch:
         except Exception:
             raise NoConnection
         else:
-            query = "INSERT INTO friends (user_id, friend_id) VALUES ({}, {})".format(user_id, friend_id)
-            cursor.execute(query)
+            cursor.execute("""INSERT INTO friends (user_id, friend_id) VALUES (%s, %s)""", [user_id, friend_id])
             db_connection.commit()
         finally:
             cursor.close()
@@ -160,10 +150,9 @@ class DBSearch:
         except Exception:
             raise NoConnection
         else:
+            cursor.execute("""DELETE FROM friends AS f WHERE f.friend_id = %s AND f.user_id = %s)""", [friend_id, user_id])
             db_connection.commit()
         finally:
-            query = "DELETE FROM friends AS f WHERE f.friend_id = {} AND f.user_id = {})".format(friend_id, user_id)
-            cursor.execute(query)
             cursor.close()
 
     @staticmethod
@@ -174,18 +163,20 @@ class DBSearch:
         except Exception:
             raise NoConnection
         else:
-            # Need to add user id in
-            query = "SELECT u1.user_id, u1.user_name FROM users AS u1" \
+            # Need to add user id in <-- i'm not sure where to put the %s
+            cursor.execute("""SELECT u1.user_id, u1.user_name FROM users AS u1" \
                     "INNER JOIN friends AS f ON u1.user_id = f.user_id" \
                     "INNER JOIN users AS u2 ON f.friend_id = u2.user_id" \
                     "WHERE u2.user_id in (1)" \
                     "AND u1.user_id <> 1" \
-                    "ORDER BY u2.user_id;"
-            cursor.execute(query)
-            db_connection.commit()
+                    "ORDER BY u2.user_id;""",
+                           [user_id])
+            result = cursor.fetchall()
+            return result
         finally:
             cursor.close()
 
+    # statuses
     @staticmethod
     def show_count_of_clothes_available(user_id):
         try:
@@ -194,16 +185,12 @@ class DBSearch:
         except Exception:
             raise NoConnection
         else:
-            query = """SELECT COUNT(*) AS count_available_items FROM availability_status AS a 
+            cursor.execute("""SELECT COUNT(*) AS count_available_items FROM availability_status AS a 
                         JOIN ownership AS o ON a.item_id = o.item_id 
                         WHERE a.item_status = 'available' 
-                        AND o.owner_id = {}""".format(user_id)
-
-            cursor.execute(query)
+                        AND o.owner_id = %s;""", [user_id])
             result = cursor.fetchall()
-            count = "You have {} items in your wardrobe that are available.".format(result)
-            # print(count)
-            return count
+            return result
         finally:
             cursor.close()
 
@@ -215,18 +202,16 @@ class DBSearch:
         except Exception:
             raise NoConnection
         else:
-            query = """SELECT COUNT(*) AS count_available_items FROM availability_status AS a 
-                          JOIN ownership AS o ON a.item_id = o.item_id 
-                          WHERE a.item_status = 'dirty' 
-                          AND o.owner_id = {}""".format(user_id)
-            cursor.execute(query)
+            cursor.execute("""SELECT COUNT(*) AS count_available_items FROM availability_status AS a 
+                                   JOIN ownership AS o ON a.item_id = o.item_id 
+                                   WHERE a.item_status = 'dirty' 
+                                   AND o.owner_id = %s;""", [user_id])
             result = cursor.fetchall()
-            count = "You have {} items in your wardrobe that are dirty.".format(result)
-            #print(count)
-            return count
+            return result
         finally:
             cursor.close()
 
+    # items
     @staticmethod
     def search_clothes(tags, user_id):
         try:
@@ -260,9 +245,8 @@ class DBSearch:
         except Exception:
             raise NoConnection
         else:
-            query = "INSERT INTO clothes (item_type, item_description, weather_tag, occasion_tag, mood_tag) " \
-                    "VALUES ({},{},{},{},{})".format(item_type, item_description, weather_tag, occasion_tag, mood_tag)
-            cursor.execute(query)
+            cursor.execute("""INSERT INTO clothes (item_type, item_description, weather_tag, occasion_tag, mood_tag) " \
+                    "VALUES (%s,%s,%s,%s,%s)""", [item_type, item_description, weather_tag, occasion_tag, mood_tag])
             db_connection.commit()
         finally:
             cursor.close()
@@ -276,9 +260,22 @@ class DBSearch:
         except Exception:
             raise NoConnection
         else:
-            query = "placeholder"
-            cursor.execute(query)
+            cursor.execute("placeholder", [])
             db_connection.commit()
         finally:
             cursor.close()
 
+    # this functions probably needs to be reworked into something else
+    @staticmethod
+    def get_item_id(item_description):
+        try:
+            db_connection = connect_to_db()
+            cursor = db_connection.cursor()
+        except Exception:
+            raise NoConnection
+        else:
+            cursor.execute("""SELECT item_id FROM clothes WHERE item_description = %s""", [item_description])
+            result = cursor.fetchall()
+            return result
+        finally:
+            cursor.close()
