@@ -23,7 +23,7 @@ class DBSearch:
 
     # login
     @staticmethod
-    def username_check(username):
+    def username_check():
         try:
             db_connection = connect_to_db()
             cur = db_connection.cursor()
