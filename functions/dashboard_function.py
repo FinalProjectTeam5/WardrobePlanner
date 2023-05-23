@@ -2,6 +2,8 @@ from WardrobePlanner.classes.db_utils import DBSearch
 # from WardrobePlanner.classes.item import Item
 from WardrobePlanner.classes.dashboard_class import Dashboard
 from WardrobePlanner.functions.tag_prompts import prompt_user, formatting_tags
+from WardrobePlanner.functions.friends import add_friend, delete_friend, show_friends_list
+from WardrobePlanner.functions.manage_wardrobe import add_item, delete_item
 
 
 
@@ -63,17 +65,20 @@ def dashboard(user):
         sub_dashboard_3_choice = manageWardrobeDashboard.get_users_choice(options_count)
 
         if sub_dashboard_3_choice == 1:
-            pass
+            item_added = add_item()
+            print(item_added)
+            return dashboard(user)
         # Add items to wardrobe
 
         elif sub_dashboard_3_choice == 2:
-            pass
+            item_deleted = delete_item()
+            print(item_deleted)
+            return dashboard(user)
         # Delete items
 
         elif sub_dashboard_3_choice == 3:
             pass
         # Do laundry
-
 
     elif dashboard_choice == 4:
         # Managing friends
@@ -81,15 +86,21 @@ def dashboard(user):
         sub_dashboard_4_choice = manageFriendsDashboard.get_users_choice(options_count)
 
         if sub_dashboard_4_choice == 1:
-            pass
+            friend_added = add_friend(user)
+            print(friend_added)
+            return dashboard(user)
         # Add friends
 
         elif sub_dashboard_4_choice == 2:
-            pass
+            friend_deleted = delete_friend(user)
+            print(friend_deleted)
+            return dashboard(user)
         # Delete friends
 
         elif sub_dashboard_4_choice == 3:
-            pass
+            friend_list = show_friends_list(user)
+            print(friend_list)
+            return dashboard(user)
         # Show friends
 
 
