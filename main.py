@@ -5,6 +5,7 @@ from WardrobePlanner.functions.dashboard_function import dashboard
 from logo import logo
 
 
+
 def main():
 
     # Starting screen
