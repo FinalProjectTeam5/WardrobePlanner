@@ -53,8 +53,18 @@ class DBSearch:
             cursor.close()
 
     @staticmethod
-    def get_location():
-        pass
+    def get_location(user_id):
+        try:
+            db_connection = connect_to_db()
+            cursor = db_connection.cursor()
+        except Exception:
+            raise NoConnection
+        else:
+            cursor.execute("""SELECT home_town, latitude, longitude FROM wardrobe_planner.user_location WHERE user_ID = %s ;""", [user_id])
+            result = cursor.fetchall()
+            return result
+        finally:
+            cursor.close()
 
     @staticmethod
     def get_user_info(username):

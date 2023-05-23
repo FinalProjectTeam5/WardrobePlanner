@@ -49,7 +49,7 @@ def dashboard(user):
             search_results = DBSearch.search_clothes(tags, user.user_id)
             print(search_results)
         elif sub_dashboard_2_choice == 2:
-            user_tags = prompt_user()
+            user_tags = prompt_user(user)
             tags = formatting_tags(user_tags)
             search_results = DBSearch.search_clothes(tags, user.user_id)
             print(search_results)

@@ -40,7 +40,7 @@ def whether_weather():
             print("Sorry that's not a number, try again!")
 
 
-def prompt_user():
+def prompt_user(user):
     input_list = []
     print("What's the occasion?")
     occasion = users_choices("occasion_tag")
@@ -49,7 +49,7 @@ def prompt_user():
     mood = users_choices("mood_tag")
     input_list.append(mood)
     if whether_weather():
-        temperature = getting_temperature_today()
+        temperature = getting_temperature_today(user)
         if temperature < 0:
             weather = tags_dict["weather_tag"][0]
         elif 0 < temperature < 10:
