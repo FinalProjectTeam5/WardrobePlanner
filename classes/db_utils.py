@@ -231,17 +231,17 @@ class DBSearch:
             raise NoConnection
         else:
             cursor.execute("""SELECT c.item_description, c.item_ID, o.owner_ID FROM wardrobe_planner.clothes AS c
-                                                   INNER JOIN wardrobe_planner.availability_status AS a ON c.item_ID = a.item_ID
-                                                   INNER JOIN wardrobe_planner.ownership AS o ON c.item_id = o.item_id
-                                                   WHERE a.item_status = 'available'
-                                                   %s
-                                                   AND c.item_id IN (
-                                                       SELECT o.item_id
-                                                       FROM wardrobe_planner.ownership AS o
-                                                       WHERE o.owner_id IN (
-                                                           SELECT f.user_ID
-                                                           FROM friends AS f
-                                                           WHERE f.friend_ID = %s));""", [tags, user_id])
+                              INNER JOIN wardrobe_planner.availability_status AS a ON c.item_ID = a.item_ID
+                              INNER JOIN wardrobe_planner.ownership AS o ON c.item_id = o.item_id
+                              WHERE a.item_status = 'available' 
+                              {} 
+                              AND c.item_id IN (
+                                  SELECT o.item_id
+                                  FROM wardrobe_planner.ownership AS o
+                                  WHERE o.owner_id IN (
+                                      SELECT f.user_ID
+                                      FROM friends AS f
+                                      WHERE f.friend_ID = {}));""".format(tags, user_id))
             result = cursor.fetchall()
             return result
         finally:
@@ -272,6 +272,20 @@ class DBSearch:
         else:
             cursor.execute("placeholder", [])
             db_connection.commit()
+        finally:
+            cursor.close()
+
+    @staticmethod
+    def get_all_users_and_ids():
+        try:
+            db_connection = connect_to_db()
+            cursor = db_connection.cursor()
+        except Exception:
+            raise NoConnection
+        else:
+            cursor.execute("""SELECT user_ID, user_name FROM wardrobe_planner.users;""")
+            result = cursor.fetchall()
+            return result
         finally:
             cursor.close()
 

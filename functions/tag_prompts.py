@@ -70,14 +70,14 @@ def formatting_tags(tag_list):
     if tag_list[0] == "":
         occasion_tag = ""
     else:
-        occasion_tag = "AND c.occasion_tag = {} ".format(tag_list[0])
+        occasion_tag = " AND c.occasion_tag = '{}' ".format(tag_list[0])
     if tag_list[1] == "":
         mood_tag = ""
     else:
-        mood_tag = "AND c.mood_tag = {} ".format(tag_list[1])
+        mood_tag = " AND c.mood_tag = '{}' ".format(tag_list[1])
     if tag_list[2] == "":
         weather_tag = ""
     else:
-        weather_tag = "AND c.weather_tag = {} ".format(tag_list[2])
+        weather_tag = " AND c.weather_tag = '{}' ".format(tag_list[2])
     return occasion_tag + mood_tag + weather_tag
 
