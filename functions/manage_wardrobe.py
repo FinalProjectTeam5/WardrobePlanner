@@ -1,16 +1,20 @@
 from WardrobePlanner.classes.db_utils import DBSearch
+from WardrobePlanner.functions.tag_prompts import users_choices
+
 
 def add_item():
-    item_type = input("What is the type of clothing? Bottom, top, full body, outerwear ")
-    item_description = input("What is the description of the item?")
-    weather_tag = input("What weather would you normally where this item? Freezing, cold, mild, warm, hot")
-    occasion_tag = input("When would you usually wear this item? Cleaning, sport, home, work, party, date")
-    mood_tag = input("In what mood would you wear this item? Cheerful, serious, romantic, sad, neutral")
+    print("What type of item are you adding?")
+    item_type = users_choices("item_type")
+    item_description = input("How would you succinctly describe it? \n")
+    print("When would you wear this item?")
+    weather_tag = users_choices("weather_tag")
+    occasion_tag = users_choices("occasion_tag")
+    mood_tag = users_choices("mood_tag")
     DBSearch.add_item_to_wardrobe(item_type, item_description, weather_tag, occasion_tag, mood_tag)
     return "{} has been added to your wardrobe".format(item_description)
 
 
 def delete_item():
-    item_to_delete = input("")
+    item_to_delete = input("Please enter the description of an item you'd like to remove: ")
     DBSearch.delete_item_from_wardrobe(item_to_delete)
     return "{} has been deleted from your wardrobe".format(item_to_delete)
