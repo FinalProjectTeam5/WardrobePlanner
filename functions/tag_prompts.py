@@ -53,11 +53,11 @@ def prompt_user():
         temperature = getting_temperature_today()
         if temperature < 0:
             weather = tags_dict["weather_tag"][0]
-        elif 0 < temperature < 10:
+        elif 0 <= temperature < 10:
             weather = tags_dict["weather_tag"][1]
-        elif 10 < temperature < 15:
+        elif 10 <= temperature < 15:
             weather = tags_dict["weather_tag"][2]
-        elif 15 < temperature < 25:
+        elif 15 <= temperature < 25:
             weather = tags_dict["weather_tag"][3]
         else:
             weather = tags_dict["weather_tag"][4]
