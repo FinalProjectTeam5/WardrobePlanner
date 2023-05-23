@@ -18,3 +18,12 @@ def delete_item():
     item_to_delete = input("Please enter the description of an item you'd like to remove: ")
     DBSearch.delete_item_from_wardrobe(item_to_delete)
     return "{} has been deleted from your wardrobe".format(item_to_delete)
+
+
+def laundry(user_id):
+    wanna_do_laundry = input("Do you want to clean all your clothes? Y/y \n")
+    if wanna_do_laundry in ["y", "Y"]:
+        DBSearch.do_laundry(user_id)
+        return "All of your clothes are clean now!"
+    else:
+        return "Ok, maybe later."

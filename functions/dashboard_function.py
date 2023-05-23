@@ -3,22 +3,20 @@ from WardrobePlanner.classes.db_utils import DBSearch
 from WardrobePlanner.classes.dashboard_class import Dashboard
 from WardrobePlanner.functions.tag_prompts import prompt_user, formatting_tags
 from WardrobePlanner.functions.friends import add_friend, delete_friend, show_friends_list
-from WardrobePlanner.functions.manage_wardrobe import add_item, delete_item
-
-
+from WardrobePlanner.functions.manage_wardrobe import add_item, delete_item, laundry
 
 mainDashboard = Dashboard("on the Main Dashboard",
-                               ["Show User Info", "Search Wardrobe", "Manage Wardrobe", "Manage Friends",
-                                "Log Out / Exit"])
+                          ["Show User Info", "Search Wardrobe", "Manage Wardrobe", "Manage Friends",
+                           "Log Out / Exit"])
 
 searchDashboard = Dashboard("in Search", ["Search all available",
-                                                  "Search through tags",
-                                                  "Back to main dashboard"])
+                                          "Search through tags",
+                                          "Back to main dashboard"])
 
 manageWardrobeDashboard = Dashboard("in Manage Wardrobe", ["Add Items To Your Wardrobe",
-                                                                     "Delete Items From Your Wardrobe",
-                                                                     "Do Laundry",
-                                                                     "Back to main dashboard"])
+                                                           "Delete Items From Your Wardrobe",
+                                                           "Do Laundry",
+                                                           "Back to main dashboard"])
 
 manageFriendsDashboard = Dashboard("in Manage Friends", ["Show Friends",
                                                          "Add Friends",
@@ -77,7 +75,9 @@ def dashboard(user):
         # Delete items
 
         elif sub_dashboard_3_choice == 3:
-            pass
+            laundry_decision = laundry(user.user_id)
+            print(laundry_decision)
+            return dashboard(user)
         # Do laundry
 
     elif dashboard_choice == 4:
@@ -102,7 +102,6 @@ def dashboard(user):
             print(friend_list)
             return dashboard(user)
         # Show friends
-
 
     elif dashboard_choice == 5:
         # Exits the dashboard and returns to main; can log in again

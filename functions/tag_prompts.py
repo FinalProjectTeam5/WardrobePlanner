@@ -3,7 +3,8 @@ from WardrobePlanner.functions.api_requests import getting_temperature_today
 
 tags_dict = {"weather_tag": ["freezing", "cold", "mild", "warm", "hot"],
              "occasion_tag": ["cleaning", "sport", "home", "work", "party", "date"],
-             "mood_tag": ["cheerful", "serious", "romantic", "sad", "neutral"]
+             "mood_tag": ["cheerful", "serious", "romantic", "sad", "neutral"],
+             "item_type": ["bottom", "top", "outer wear", "full body"]
              }
 
 

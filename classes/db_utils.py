@@ -33,7 +33,7 @@ class DBSearch:
             query = "SELECT user_name FROM users;"
             cur.execute(query)
             result = cur.fetchall()
-            #print(result)
+            # print(result)
             return result
         finally:
             cur.close()
@@ -92,11 +92,12 @@ class DBSearch:
         except Exception:
             raise NoConnection
         else:
-            cursor.execute("""INSERT INTO user_location (user_id, home_town, latitude, longitude) VALUES (%s, %s, %s, %s);""", [user_id, hometown, lat, long])
+            cursor.execute(
+                """INSERT INTO user_location (user_id, home_town, latitude, longitude) VALUES (%s, %s, %s, %s);""",
+                [user_id, hometown, lat, long])
             db_connection.commit()
         finally:
             cursor.close()
-
 
     # is this function nescessary?
     @staticmethod
@@ -112,7 +113,6 @@ class DBSearch:
             return result
         finally:
             cursor.close()
-
 
     # friends
     @staticmethod
@@ -150,7 +150,8 @@ class DBSearch:
         except Exception:
             raise NoConnection
         else:
-            cursor.execute("""DELETE FROM friends AS f WHERE f.friend_id = %s AND f.user_id = %s)""", [friend_id, user_id])
+            cursor.execute("""DELETE FROM friends AS f WHERE f.friend_id = %s AND f.user_id = %s)""",
+                           [friend_id, user_id])
             db_connection.commit()
         finally:
             cursor.close()
@@ -210,6 +211,25 @@ class DBSearch:
             return result
         finally:
             cursor.close()
+
+    @staticmethod
+    def do_laundry(user_id):
+        try:
+            db_connection = connect_to_db()
+            cursor = db_connection.cursor()
+        except Exception:
+            raise NoConnection
+        else:
+            cursor.execute("""UPDATE availability_status AS a
+                                    INNER JOIN ownership AS o ON a.item_id = o.item_id
+                                    SET item_status = 'available'
+                                    WHERE a.item_status = 'dirty'
+                                    AND o.owner_id = %s;""", [user_id])
+            db_connection.commit()
+        finally:
+            cursor.close()
+
+
 
     # items
     @staticmethod
