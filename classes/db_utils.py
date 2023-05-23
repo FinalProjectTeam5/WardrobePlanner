@@ -164,7 +164,7 @@ class DBSearch:
         except Exception:
             raise NoConnection
         else:
-            # Need to add user id in <-- i'm not sure where to put the %s
+            
             cursor.execute("""SELECT u1.user_id, u1.user_name FROM users AS u1" \
                     "INNER JOIN friends AS f ON u1.user_id = f.user_id" \
                     "INNER JOIN users AS u2 ON f.friend_id = u2.user_id" \
@@ -272,15 +272,15 @@ class DBSearch:
             cursor.close()
 
     @staticmethod
-    def delete_item_from_wardrobe(item_description):
+        def delete_item_from_wardrobe(item_id):
         try:
             db_connection = connect_to_db()
             cursor = db_connection.cursor()
-            # Need delete item query
         except Exception:
             raise NoConnection
         else:
-            cursor.execute("placeholder", [])
+            cursor.execute("""DELETE FROM availability_status AS a WHERE a.item_id = %s;""", [item_id])
+            cursor.execute("""DELETE FROM clothes AS c WHERE c.item_id = %s;""", [item_id])
             db_connection.commit()
         finally:
             cursor.close()
