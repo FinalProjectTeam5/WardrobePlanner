@@ -5,4 +5,4 @@ from .identifying_the_city_and_getting_coordinates import getting_hometown
 from .login import sign_up, login, get_new_password, get_new_username, show_user_id
 from .search_clothes import show_item_id, get_item_availability
 from .tag_prompts import prompt_user, formatting_tags
-from .manage_wardrobe import add_item, delete_item
+from .manage_wardrobe import add_item, delete_item, laundry

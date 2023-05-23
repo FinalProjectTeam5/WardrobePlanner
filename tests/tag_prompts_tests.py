@@ -1,5 +1,7 @@
+import unittest
 from unittest import TestCase, mock
 from WardrobePlanner.functions.tag_prompts import users_choices, whether_weather
+
 
 class Test_TagPrompts(TestCase):
     def test_whether_weather_valid_input_y(self):
@@ -11,9 +13,6 @@ class Test_TagPrompts(TestCase):
             self.assertFalse(whether_weather())
 
 
-            
-            
-            
 class MyTestCase(unittest.TestCase):
     def test_something(self):
         self.assertEqual(True, False)  # add assertion here

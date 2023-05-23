@@ -272,7 +272,7 @@ class DBSearch:
             cursor.close()
 
     @staticmethod
-        def delete_item_from_wardrobe(item_id):
+    def delete_item_from_wardrobe(item_id):
         try:
             db_connection = connect_to_db()
             cursor = db_connection.cursor()

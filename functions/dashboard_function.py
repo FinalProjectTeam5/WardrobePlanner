@@ -40,7 +40,6 @@ def dashboard(user):
               "User hometown: {} \n".format(user.username, user.password, user.home_town))
         return dashboard(user)
 
-
     elif dashboard_choice == 2:
         options_count = searchDashboard.generate_menu()
         sub_dashboard_2_choice = searchDashboard.get_users_choice(options_count)
@@ -55,7 +54,6 @@ def dashboard(user):
             print(search_results)
         else:
             return dashboard(user)
-
 
     elif dashboard_choice == 3:
         # Managing the wardrobe
