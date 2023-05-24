@@ -29,16 +29,19 @@ def users_choices(tag_list_name):
 
 def whether_weather():
     while True:
-        user_choice = input("Do you want to factor in the weather? (y/n)\n_")
-        if user_choice.lower() == "y":
-            return True
-        elif user_choice.lower() == "n":
-            return False
-        else:
-            raise ValueError("Invalid input. Please type y/n. Try again.")
+        try:
+            user_choice = input("Do you want to factor in the weather? (y/n)\n_")
+            if user_choice.lower() == "y":
+                return True
+            elif user_choice.lower() == "n":
+                return False
+            else:
+                raise ValueError("Please type y/n. Try again.")
+        except ValueError:
+            print("Please type y/n. Try again.")
 
 
-def prompt_user():
+def prompt_user(user):
     input_list = []
     print("What's the occasion?")
     occasion = users_choices("occasion_tag")
@@ -47,7 +50,7 @@ def prompt_user():
     mood = users_choices("mood_tag")
     input_list.append(mood)
     if whether_weather():
-        temperature = getting_temperature_today()
+        temperature = getting_temperature_today(user)
         if temperature < 0:
             weather = tags_dict["weather_tag"][0]
         elif 0 <= temperature < 10:
@@ -68,14 +71,14 @@ def formatting_tags(tag_list):
     if tag_list[1] == "":
         occasion_tag = ""
     else:
-        occasion_tag = "AND c.occasion_tag = {} ".format(tag_list[1])
+        occasion_tag = " AND c.occasion_tag = '{}' ".format(tag_list[0])
     if tag_list[1] == "":
         mood_tag = ""
     else:
-        mood_tag = "AND c.mood_tag = {} ".format(tag_list[2])
-    if tag_list[0] == "":
+        mood_tag = " AND c.mood_tag = '{}' ".format(tag_list[1])
+    if tag_list[2] == "":
         weather_tag = ""
     else:
-        weather_tag = "AND c.weather_tag = {} ".format(tag_list[0])
+        weather_tag = " AND c.weather_tag = '{}' ".format(tag_list[2])
     return occasion_tag + mood_tag + weather_tag
 

@@ -1,9 +1,11 @@
 from WardrobePlanner.classes.db_utils import DBSearch
 # from WardrobePlanner.classes.item import Item
 from WardrobePlanner.classes.dashboard_class import Dashboard
-from WardrobePlanner.functions.tag_prompts import prompt_user, formatting_tags
 from WardrobePlanner.functions.friends import add_friend, delete_friend, show_friends_list
 from WardrobePlanner.functions.manage_wardrobe import add_item, delete_item, laundry, add_item_id
+from WardrobePlanner.functions.search.tag_prompts import prompt_user, formatting_tags
+from WardrobePlanner.functions.search.results_handling import display_results, what_user_wants_to_do_with_the_results
+
 
 mainDashboard = Dashboard("on the Main Dashboard",
                           ["Show User Info", "Search Wardrobe", "Manage Wardrobe", "Manage Friends",
@@ -46,11 +48,16 @@ def dashboard(user):
         if sub_dashboard_2_choice == 1:
             tags = ""
             search_results = DBSearch.search_clothes(tags, user.user_id)
+            number_of_results = display_results(search_results, user)
+            decision = what_user_wants_to_do_with_the_results(search_results, number_of_results, user)
             print(search_results)
         elif sub_dashboard_2_choice == 2:
-            user_tags = prompt_user()
+            user_tags = prompt_user(user)
             tags = formatting_tags(user_tags)
+            print(tags)
             search_results = DBSearch.search_clothes(tags, user.user_id)
+            number_of_results = display_results(search_results, user)
+            decision = what_user_wants_to_do_with_the_results(search_results, number_of_results, user)
             print(search_results)
         else:
             return dashboard(user)

@@ -53,8 +53,18 @@ class DBSearch:
             cursor.close()
 
     @staticmethod
-    def get_location():
-        pass
+    def get_location(user_id):
+        try:
+            db_connection = connect_to_db()
+            cursor = db_connection.cursor()
+        except Exception:
+            raise NoConnection
+        else:
+            cursor.execute("""SELECT home_town, latitude, longitude FROM wardrobe_planner.user_location WHERE user_ID = %s ;""", [user_id])
+            result = cursor.fetchall()
+            return result
+        finally:
+            cursor.close()
 
     @staticmethod
     def get_user_info(username):
@@ -240,17 +250,17 @@ class DBSearch:
             raise NoConnection
         else:
             cursor.execute("""SELECT c.item_description, c.item_ID, o.owner_ID FROM wardrobe_planner.clothes AS c
-                                                   INNER JOIN wardrobe_planner.availability_status AS a ON c.item_ID = a.item_ID
-                                                   INNER JOIN wardrobe_planner.ownership AS o ON c.item_id = o.item_id
-                                                   WHERE a.item_status = 'available'
-                                                   %s
-                                                   AND c.item_id IN (
-                                                       SELECT o.item_id
-                                                       FROM wardrobe_planner.ownership AS o
-                                                       WHERE o.owner_id IN (
-                                                           SELECT f.user_ID
-                                                           FROM friends AS f
-                                                           WHERE f.friend_ID = %s));""", [tags, user_id])
+                              INNER JOIN wardrobe_planner.availability_status AS a ON c.item_ID = a.item_ID
+                              INNER JOIN wardrobe_planner.ownership AS o ON c.item_id = o.item_id
+                              WHERE a.item_status = 'available' 
+                              {} 
+                              AND c.item_id IN (
+                                  SELECT o.item_id
+                                  FROM wardrobe_planner.ownership AS o
+                                  WHERE o.owner_id IN (
+                                      SELECT f.user_ID
+                                      FROM friends AS f
+                                      WHERE f.friend_ID = {}));""".format(tags, user_id))
             result = cursor.fetchall()
             return result
         finally:
@@ -302,6 +312,20 @@ class DBSearch:
             cursor.execute("""DELETE FROM availability_status AS a WHERE a.item_id = %s;""", [item_id])
             cursor.execute("""DELETE FROM clothes AS c WHERE c.item_id = %s;""", [item_id])
             db_connection.commit()
+        finally:
+            cursor.close()
+
+    @staticmethod
+    def get_all_users_and_ids():
+        try:
+            db_connection = connect_to_db()
+            cursor = db_connection.cursor()
+        except Exception:
+            raise NoConnection
+        else:
+            cursor.execute("""SELECT user_ID, user_name FROM wardrobe_planner.users;""")
+            result = cursor.fetchall()
+            return result
         finally:
             cursor.close()
 

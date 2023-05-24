@@ -1,5 +1,5 @@
 from WardrobePlanner.classes.db_utils import DBSearch
-from WardrobePlanner.functions.tag_prompts import users_choices
+from WardrobePlanner.functions.search.tag_prompts import users_choices
 
 
 def add_item_id(user_id):
