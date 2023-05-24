@@ -3,7 +3,7 @@ from WardrobePlanner.classes.db_utils import DBSearch
 from WardrobePlanner.classes.dashboard_class import Dashboard
 from WardrobePlanner.functions.tag_prompts import prompt_user, formatting_tags
 from WardrobePlanner.functions.friends import add_friend, delete_friend, show_friends_list
-from WardrobePlanner.functions.manage_wardrobe import add_item, delete_item, laundry
+from WardrobePlanner.functions.manage_wardrobe import add_item, delete_item, laundry, add_item_id
 
 mainDashboard = Dashboard("on the Main Dashboard",
                           ["Show User Info", "Search Wardrobe", "Manage Wardrobe", "Manage Friends",
@@ -61,7 +61,8 @@ def dashboard(user):
         sub_dashboard_3_choice = manageWardrobeDashboard.get_users_choice(options_count)
 
         if sub_dashboard_3_choice == 1:
-            item_added = add_item()
+            item_id = add_item_id(user.user_id)
+            item_added = add_item(item_id)
             print(item_added)
             return dashboard(user)
         # Add items to wardrobe

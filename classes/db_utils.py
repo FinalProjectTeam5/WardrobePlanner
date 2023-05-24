@@ -164,7 +164,7 @@ class DBSearch:
         except Exception:
             raise NoConnection
         else:
-            
+
             cursor.execute("""SELECT u1.user_id, u1.user_name FROM users AS u1" \
                     "INNER JOIN friends AS f ON u1.user_id = f.user_id" \
                     "INNER JOIN users AS u2 ON f.friend_id = u2.user_id" \
@@ -229,9 +229,8 @@ class DBSearch:
         finally:
             cursor.close()
 
-
-
     # items
+
     @staticmethod
     def search_clothes(tags, user_id):
         try:
@@ -258,16 +257,37 @@ class DBSearch:
             cursor.close()
 
     @staticmethod
-    def add_item_to_wardrobe(item_type, item_description, weather_tag, occasion_tag, mood_tag):
+    def add_item_to_wardrobe(item_id, item_type, item_description, weather_tag, occasion_tag, mood_tag):
         try:
             db_connection = connect_to_db()
             cursor = db_connection.cursor()
         except Exception:
             raise NoConnection
         else:
-            cursor.execute("""INSERT INTO clothes (item_type, item_description, weather_tag, occasion_tag, mood_tag) " \
-                    "VALUES (%s,%s,%s,%s,%s)""", [item_type, item_description, weather_tag, occasion_tag, mood_tag])
+            try:
+                cursor.execute("""INSERT INTO clothes (item_ID, item_type, item_description, weather_tag, occasion_tag, mood_tag)
+                                        VALUES (%s,%s,%s,%s,%s,%s);""",
+                               [item_id, item_type, item_description, weather_tag, occasion_tag, mood_tag])
+                db_connection.commit()
+            except Exception:
+                return
+        finally:
+            cursor.close()
+
+    @staticmethod
+    def add_item_ID(user_id):
+        try:
+            db_connection = connect_to_db()
+            cursor = db_connection.cursor()
+        except Exception:
+            raise NoConnection
+        else:
+            cursor.execute("""INSERT INTO ownership (owner_ID)
+                                        VALUES (%s);""", [user_id])
             db_connection.commit()
+            cursor.execute("""SELECT item_id FROM ownership ORDER BY item_id DESC LIMIT 1;""")
+            result = cursor.fetchall()[0][0]
+            return result
         finally:
             cursor.close()
 
@@ -317,3 +337,8 @@ class DBSearch:
             return result
         finally:
             cursor.close()
+
+
+search = DBSearch
+search.add_item_ID(1)
+search.add_item_to_wardrobe(189, "b", "c", "d", "f", "r")

@@ -2,7 +2,11 @@ from WardrobePlanner.classes.db_utils import DBSearch
 from WardrobePlanner.functions.tag_prompts import users_choices
 
 
-def add_item():
+def add_item_id(user_id):
+    return DBSearch.add_item_ID(user_id)
+
+
+def add_item(item_id):
     print("What type of item are you adding?")
     item_type = users_choices("item_type")
     item_description = input("How would you succinctly describe it? \n")
@@ -10,7 +14,7 @@ def add_item():
     weather_tag = users_choices("weather_tag")
     occasion_tag = users_choices("occasion_tag")
     mood_tag = users_choices("mood_tag")
-    DBSearch.add_item_to_wardrobe(item_type, item_description, weather_tag, occasion_tag, mood_tag)
+    DBSearch.add_item_to_wardrobe(item_id, item_type, item_description, weather_tag, occasion_tag, mood_tag)
     return "{} has been added to your wardrobe".format(item_description)
 
 
