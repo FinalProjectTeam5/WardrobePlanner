@@ -29,15 +29,15 @@ def users_choices(tag_list_name):
 def whether_weather():
     while True:
         try:
-            user_choice = input("Do you want to factor in the weather?(y/n)\n_")
+            user_choice = input("Do you want to factor in the weather? (y/n)\n_")
             if user_choice.lower() == "y":
                 return True
             elif user_choice.lower() == "n":
                 return False
             else:
-                print("Please type y/n. Try again.")
+                raise ValueError("Please type y/n. Try again.")
         except ValueError:
-            print("Sorry that's not a number, try again!")
+            print("Please type y/n. Try again.")
 
 
 def prompt_user(user):
