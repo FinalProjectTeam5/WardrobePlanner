@@ -23,7 +23,7 @@ class DBSearch:
 
     # login
     @staticmethod
-    def username_check(username):
+    def username_check():
         try:
             db_connection = connect_to_db()
             cur = db_connection.cursor()
@@ -33,7 +33,7 @@ class DBSearch:
             query = "SELECT user_name FROM users;"
             cur.execute(query)
             result = cur.fetchall()
-            #print(result)
+            # print(result)
             return result
         finally:
             cur.close()
@@ -92,11 +92,12 @@ class DBSearch:
         except Exception:
             raise NoConnection
         else:
-            cursor.execute("""INSERT INTO user_location (user_id, home_town, latitude, longitude) VALUES (%s, %s, %s, %s);""", [user_id, hometown, lat, long])
+            cursor.execute(
+                """INSERT INTO user_location (user_id, home_town, latitude, longitude) VALUES (%s, %s, %s, %s);""",
+                [user_id, hometown, lat, long])
             db_connection.commit()
         finally:
             cursor.close()
-
 
     # is this function nescessary?
     @staticmethod
@@ -112,7 +113,6 @@ class DBSearch:
             return result
         finally:
             cursor.close()
-
 
     # friends
     @staticmethod
@@ -150,7 +150,8 @@ class DBSearch:
         except Exception:
             raise NoConnection
         else:
-            cursor.execute("""DELETE FROM friends AS f WHERE f.friend_id = %s AND f.user_id = %s)""", [friend_id, user_id])
+            cursor.execute("""DELETE FROM friends AS f WHERE f.friend_id = %s AND f.user_id = %s)""",
+                           [friend_id, user_id])
             db_connection.commit()
         finally:
             cursor.close()
@@ -163,12 +164,12 @@ class DBSearch:
         except Exception:
             raise NoConnection
         else:
-            # Need to add user id in <-- i'm not sure where to put the %s
+
             cursor.execute("""SELECT u1.user_id, u1.user_name FROM users AS u1" \
                     "INNER JOIN friends AS f ON u1.user_id = f.user_id" \
                     "INNER JOIN users AS u2 ON f.friend_id = u2.user_id" \
-                    "WHERE u2.user_id in (1)" \
-                    "AND u1.user_id <> 1" \
+                    "WHERE u2.user_id in (%s)" \
+                    "AND u1.user_id <> %s" \
                     "ORDER BY u2.user_id;""",
                            [user_id])
             result = cursor.fetchall()
@@ -211,7 +212,25 @@ class DBSearch:
         finally:
             cursor.close()
 
+    @staticmethod
+    def do_laundry(user_id):
+        try:
+            db_connection = connect_to_db()
+            cursor = db_connection.cursor()
+        except Exception:
+            raise NoConnection
+        else:
+            cursor.execute("""UPDATE availability_status AS a
+                                    INNER JOIN ownership AS o ON a.item_id = o.item_id
+                                    SET item_status = 'available'
+                                    WHERE a.item_status = 'dirty'
+                                    AND o.owner_id = %s;""", [user_id])
+            db_connection.commit()
+        finally:
+            cursor.close()
+
     # items
+
     @staticmethod
     def search_clothes(tags, user_id):
         try:
@@ -238,29 +257,50 @@ class DBSearch:
             cursor.close()
 
     @staticmethod
-    def add_item_to_wardrobe(item_type, item_description, weather_tag, occasion_tag, mood_tag):
+    def add_item_to_wardrobe(item_id, item_type, item_description, weather_tag, occasion_tag, mood_tag):
         try:
             db_connection = connect_to_db()
             cursor = db_connection.cursor()
         except Exception:
             raise NoConnection
         else:
-            cursor.execute("""INSERT INTO clothes (item_type, item_description, weather_tag, occasion_tag, mood_tag) " \
-                    "VALUES (%s,%s,%s,%s,%s)""", [item_type, item_description, weather_tag, occasion_tag, mood_tag])
-            db_connection.commit()
+            try:
+                cursor.execute("""INSERT INTO clothes (item_ID, item_type, item_description, weather_tag, occasion_tag, mood_tag)
+                                        VALUES (%s,%s,%s,%s,%s,%s);""",
+                               [item_id, item_type, item_description, weather_tag, occasion_tag, mood_tag])
+                db_connection.commit()
+            except Exception:
+                return
         finally:
             cursor.close()
 
     @staticmethod
-    def delete_item_from_wardrobe(item_description):
+    def add_item_ID(user_id):
         try:
             db_connection = connect_to_db()
             cursor = db_connection.cursor()
-            # Need delete item query
         except Exception:
             raise NoConnection
         else:
-            cursor.execute("placeholder", [])
+            cursor.execute("""INSERT INTO ownership (owner_ID)
+                                        VALUES (%s);""", [user_id])
+            db_connection.commit()
+            cursor.execute("""SELECT item_id FROM ownership ORDER BY item_id DESC LIMIT 1;""")
+            result = cursor.fetchall()[0][0]
+            return result
+        finally:
+            cursor.close()
+
+    @staticmethod
+    def delete_item_from_wardrobe(item_id):
+        try:
+            db_connection = connect_to_db()
+            cursor = db_connection.cursor()
+        except Exception:
+            raise NoConnection
+        else:
+            cursor.execute("""DELETE FROM availability_status AS a WHERE a.item_id = %s;""", [item_id])
+            cursor.execute("""DELETE FROM clothes AS c WHERE c.item_id = %s;""", [item_id])
             db_connection.commit()
         finally:
             cursor.close()
@@ -279,3 +319,26 @@ class DBSearch:
             return result
         finally:
             cursor.close()
+
+    @staticmethod
+    def show_all_user_clothes(user_id):
+        try:
+            db_connection = connect_to_db()
+            cursor = db_connection.cursor()
+        except Exception:
+            raise NoConnection
+        else:
+            cursor.execute("""SELECT c.item_ID, c.item_description, a.item_status
+                            FROM clothes AS c
+                            JOIN ownership AS o ON c.item_ID = o.item_ID
+                            JOIN availability_status AS a ON c.item_ID = a.item_ID
+                            WHERE o.owner_ID = %s ;""", [user_id])
+            result = cursor.fetchall()
+            return result
+        finally:
+            cursor.close()
+
+
+search = DBSearch
+search.add_item_ID(1)
+search.add_item_to_wardrobe(189, "b", "c", "d", "f", "r")

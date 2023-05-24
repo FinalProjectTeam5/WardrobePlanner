@@ -27,7 +27,7 @@ def get_new_username():
         print("Sorry, your username should be between 2 and 20 characters long.\n Try again.")
         return get_new_username()
     else:
-        results = DBSearch.username_check(username)
+        results = DBSearch.username_check()
         found_ya = False
         for result in results:
             if username == result[0]:
@@ -67,7 +67,7 @@ def verify_password(password_given, password_in_database ):
 
 def login():
     username = input("Your username: ")
-    results = DBSearch.username_check(username)
+    results = DBSearch.username_check()
     #print(results)
     found_ya = False
     for result in results:

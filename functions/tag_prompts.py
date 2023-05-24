@@ -3,7 +3,8 @@ from WardrobePlanner.functions.api_requests import getting_temperature_today
 
 tags_dict = {"weather_tag": ["freezing", "cold", "mild", "warm", "hot"],
              "occasion_tag": ["cleaning", "sport", "home", "work", "party", "date"],
-             "mood_tag": ["cheerful", "serious", "romantic", "sad", "neutral"]
+             "mood_tag": ["cheerful", "serious", "romantic", "sad", "neutral"],
+             "item_type": ["bottom", "top", "outer wear", "full body"]
              }
 
 
@@ -23,21 +24,18 @@ def users_choices(tag_list_name):
             else:
                 print("Please choose an option from the list. Try again.")
         except ValueError:
-            print("Sorry that's not a number, try again!")
+            print("Sorry that's not a number from the requested range, try again!")
 
 
 def whether_weather():
     while True:
-        try:
-            user_choice = input("Do you want to factor in the weather?(y/n)\n_")
-            if user_choice.lower() == "y":
-                return True
-            elif user_choice.lower() == "n":
-                return False
-            else:
-                print("Please type y/n. Try again.")
-        except ValueError:
-            print("Sorry that's not a number, try again!")
+        user_choice = input("Do you want to factor in the weather? (y/n)\n_")
+        if user_choice.lower() == "y":
+            return True
+        elif user_choice.lower() == "n":
+            return False
+        else:
+            raise ValueError("Invalid input. Please type y/n. Try again.")
 
 
 def prompt_user():
@@ -52,14 +50,14 @@ def prompt_user():
         temperature = getting_temperature_today()
         if temperature < 0:
             weather = tags_dict["weather_tag"][0]
-        elif 0 < temperature < 10:
+        elif 0 <= temperature < 10:
             weather = tags_dict["weather_tag"][1]
-        elif 10 < temperature < 15:
+        elif 10 <= temperature < 15:
             weather = tags_dict["weather_tag"][2]
-        elif 15 < temperature < 25:
+        elif 15 <= temperature < 25:
             weather = tags_dict["weather_tag"][3]
         else:
-            weather = tags_dict["weather_tag"][3]
+            weather = tags_dict["weather_tag"][4]
         input_list.append(weather)
     else:
         input_list.append("")
@@ -67,17 +65,17 @@ def prompt_user():
 
 
 def formatting_tags(tag_list):
-    if tag_list[0] == "":
+    if tag_list[1] == "":
         occasion_tag = ""
     else:
-        occasion_tag = "AND c.occasion_tag = {} ".format(tag_list[0])
+        occasion_tag = "AND c.occasion_tag = {} ".format(tag_list[1])
     if tag_list[1] == "":
         mood_tag = ""
     else:
-        mood_tag = "AND c.mood_tag = {} ".format(tag_list[1])
-    if tag_list[2] == "":
+        mood_tag = "AND c.mood_tag = {} ".format(tag_list[2])
+    if tag_list[0] == "":
         weather_tag = ""
     else:
-        weather_tag = "AND c.weather_tag = {} ".format(tag_list[2])
+        weather_tag = "AND c.weather_tag = {} ".format(tag_list[0])
     return occasion_tag + mood_tag + weather_tag
 
