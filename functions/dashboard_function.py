@@ -84,6 +84,12 @@ def dashboard(user):
         sub_dashboard_4_choice = manageFriendsDashboard.get_users_choice(options_count)
 
         if sub_dashboard_4_choice == 1:
+            friend_list = show_friends_list(user)
+            print(friend_list)
+            return dashboard(user)
+        # Show friends
+
+        elif sub_dashboard_4_choice == 2:
             friend_added = add_friend(user)
             print(friend_added)
             return dashboard(user)
@@ -94,12 +100,6 @@ def dashboard(user):
             print(friend_deleted)
             return dashboard(user)
         # Delete friends
-
-        elif sub_dashboard_4_choice == 3:
-            friend_list = show_friends_list(user)
-            print(friend_list)
-            return dashboard(user)
-        # Show friends
 
     elif dashboard_choice == 5:
         # Exits the dashboard and returns to main; can log in again
