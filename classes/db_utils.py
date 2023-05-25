@@ -174,14 +174,15 @@ class DBSearch:
         except Exception:
             raise NoConnection
         else:
-
-            cursor.execute("""SELECT u1.user_id, u1.user_name FROM users AS u1" \
-                    "INNER JOIN friends AS f ON u1.user_id = f.user_id" \
-                    "INNER JOIN users AS u2 ON f.friend_id = u2.user_id" \
-                    "WHERE u2.user_id in (%s)" \
-                    "AND u1.user_id <> %s" \
-                    "ORDER BY u2.user_id;""",
-                           [user_id])
+            cursor.execute("""
+                SELECT u1.user_id, u1.user_name
+                FROM users AS u1
+                INNER JOIN friends AS f ON u1.user_id = f.user_id
+                INNER JOIN users AS u2 ON f.friend_id = u2.user_id
+                WHERE u2.user_id = %s
+                AND u1.user_id <> %s
+                ORDER BY u2.user_id;
+            """, [user_id, user_id])
             result = cursor.fetchall()
             return result
         finally:
@@ -363,6 +364,4 @@ class DBSearch:
             cursor.close()
 
 
-search = DBSearch
-search.add_item_ID(1)
-search.add_item_to_wardrobe(189, "b", "c", "d", "f", "r")
+
