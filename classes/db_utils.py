@@ -160,7 +160,7 @@ class DBSearch:
         except Exception:
             raise NoConnection
         else:
-            cursor.execute("""DELETE FROM friends AS f WHERE f.friend_id = %s AND f.user_id = %s)""",
+            cursor.execute("""DELETE FROM friends AS f WHERE f.friend_id = %s AND f.user_id = %s""",
                            [friend_id, user_id])
             db_connection.commit()
         finally:
@@ -177,8 +177,8 @@ class DBSearch:
             cursor.execute("""
                 SELECT u1.user_id, u1.user_name
                 FROM users AS u1
-                INNER JOIN friends AS f ON u1.user_id = f.user_id
-                INNER JOIN users AS u2 ON f.friend_id = u2.user_id
+                INNER JOIN friends AS f ON u1.user_id = f.friend_id
+                INNER JOIN users AS u2 ON f.user_id = u2.user_id
                 WHERE u2.user_id = %s
                 AND u1.user_id <> %s
                 ORDER BY u2.user_id;
