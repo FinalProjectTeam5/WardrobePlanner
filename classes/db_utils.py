@@ -297,7 +297,7 @@ class DBSearch:
                                         VALUES (%s);""", [user_id])
             db_connection.commit()
             cursor.execute("""SELECT item_id FROM ownership ORDER BY item_id DESC LIMIT 1;""")
-            result = cursor.fetchall()[0][0]
+            result = cursor.fetchall()
             return result
         finally:
             cursor.close()

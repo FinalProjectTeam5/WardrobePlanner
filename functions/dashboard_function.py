@@ -68,7 +68,7 @@ def dashboard(user):
         sub_dashboard_3_choice = manageWardrobeDashboard.get_users_choice(options_count)
 
         if sub_dashboard_3_choice == 1:
-            item_id = add_item_id(user.user_id)
+            item_id = add_item_id(user.user_id)[0][0]
             item_added = add_item(item_id)
             print(item_added)
             return dashboard(user)
@@ -92,19 +92,19 @@ def dashboard(user):
         sub_dashboard_4_choice = manageFriendsDashboard.get_users_choice(options_count)
 
         if sub_dashboard_4_choice == 1:
-            friend_list = show_friends_list(user)
+            friend_list = show_friends_list(user.user_id)
             print(friend_list)
             return dashboard(user)
         # Show friends
 
         elif sub_dashboard_4_choice == 2:
-            friend_added = add_friend(user)
+            friend_added = add_friend(user.user_id)
             print(friend_added)
             return dashboard(user)
         # Add friends
 
-        elif sub_dashboard_4_choice == 2:
-            friend_deleted = delete_friend(user)
+        elif sub_dashboard_4_choice == 3:
+            friend_deleted = delete_friend(user.user_id)
             print(friend_deleted)
             return dashboard(user)
         # Delete friends
