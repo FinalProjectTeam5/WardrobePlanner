@@ -5,8 +5,9 @@ def add_friend(user):
     friend_username = input("What is the username of the friend you would like to add?")
     friend_id = DBSearch.get_friend_user_id(friend_username)
     friends_list = DBSearch.get_friends_list(user.user_id)
-    if friend_id in friends_list:
-        return "You are already friends with {}.".format(friend_username)
+    for i in range(len(friends_list)):
+        if friend_id in friends_list[i]:
+            return "You are already friends with {}.".format(friend_username)
     if friend_id == "NULL":
         return "Sorry, that user doesn't exist"
     else:
@@ -16,7 +17,7 @@ def add_friend(user):
 
 def show_friends_list(user):
     friends_list = DBSearch.get_friends_list(user.user_id)
-    return "Here is a list of your friends: {}".format(", ".join(friends_list))
+    return "Here is a list of your friends: {}".format(friends_list)
 
 
 def delete_friend(user):
