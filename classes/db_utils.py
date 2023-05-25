@@ -60,7 +60,9 @@ class DBSearch:
         except Exception:
             raise NoConnection
         else:
-            cursor.execute("""SELECT home_town, latitude, longitude FROM wardrobe_planner.user_location WHERE user_ID = %s ;""", [user_id])
+            cursor.execute(
+                """SELECT home_town, latitude, longitude FROM wardrobe_planner.user_location WHERE user_ID = %s ;""",
+                [user_id])
             result = cursor.fetchall()
             return result
         finally:
@@ -275,13 +277,11 @@ class DBSearch:
         except Exception:
             raise NoConnection
         else:
-            try:
-                cursor.execute("""INSERT INTO clothes (item_ID, item_type, item_description, weather_tag, occasion_tag, mood_tag)
-                                        VALUES (%s,%s,%s,%s,%s,%s);""",
-                               [item_id, item_type, item_description, weather_tag, occasion_tag, mood_tag])
-                db_connection.commit()
-            except Exception:
-                return
+            cursor.execute("""INSERT INTO clothes 
+                                (item_ID, item_type, item_description, weather_tag, occasion_tag, mood_tag) 
+                                VALUES (%s,%s,%s,%s,%s,%s);""",
+                           [item_id, item_type, item_description, weather_tag, occasion_tag, mood_tag])
+            db_connection.commit()
         finally:
             cursor.close()
 
@@ -316,6 +316,21 @@ class DBSearch:
         finally:
             cursor.close()
 
+    # It's important for delete_item function
+    @staticmethod
+    def get_item_id(item_description):
+        try:
+            db_connection = connect_to_db()
+            cursor = db_connection.cursor()
+        except Exception:
+            raise NoConnection
+        else:
+            cursor.execute("""SELECT item_id FROM clothes WHERE item_description = %s""", [item_description])
+            result = cursor.fetchall()
+            return result
+        finally:
+            cursor.close()
+
     @staticmethod
     def get_all_users_and_ids():
         try:
@@ -331,19 +346,6 @@ class DBSearch:
             cursor.close()
 
     # this functions probably needs to be reworked into something else
-    @staticmethod
-    def get_item_id(item_description):
-        try:
-            db_connection = connect_to_db()
-            cursor = db_connection.cursor()
-        except Exception:
-            raise NoConnection
-        else:
-            cursor.execute("""SELECT item_id FROM clothes WHERE item_description = %s""", [item_description])
-            result = cursor.fetchall()
-            return result
-        finally:
-            cursor.close()
 
     @staticmethod
     def show_all_user_clothes(user_id):
@@ -362,6 +364,3 @@ class DBSearch:
             return result
         finally:
             cursor.close()
-
-
-
