@@ -2,7 +2,7 @@ from unittest import TestCase, main, mock
 from WardrobePlanner.classes.db_utils import DBSearch
 
 
-class Test_User(TestCase):
+class Test_DBUtils(TestCase):
     def test_username_check_if_returns_all_users(self):
         """This function is always returning a list of all created users, regardless of existing / non-existing username
         - so only 1 test has been created"""
@@ -47,9 +47,73 @@ class Test_User(TestCase):
         expected = []
         self.assertEqual(expected, result)
 
+    def test_get_friend_user_id_valid_input(self):
+        username = "Maria"
+        result = DBSearch.get_friend_user_id(username)
+        expected = [(2,)]
+        self.assertEqual(expected, result)
 
+    def test_get_friend_user_id_invalid_input(self):
+        username = "XYZ"
+        result = DBSearch.get_friend_user_id(username)
+        expected = []
+        self.assertEqual(expected, result)
+
+    def test_get_friends_list_valid_input(self):
+        user_id = 1
+        result = DBSearch.get_friends_list(user_id)
+        expected = [(2, 'Maria'), (3, 'Jenny')]
+        self.assertEqual(expected, result)
+
+    def test_get_friends_list_invalid_input(self):
+        user_id = "p"
+        result = DBSearch.get_friends_list(user_id)
+        expected = []
+        self.assertEqual(expected, result)
+
+    def test_show_count_of_clothes_available_valid_input(self):
+        user_id = 1
+        result = DBSearch.show_count_of_clothes_available(user_id)
+        expected = [(37,)]
+        self.assertEqual(expected, result)
+
+    def test_show_count_of_clothes_available_invalid_input(self):
+        user_id = 100
+        result = DBSearch.show_count_of_clothes_available(user_id)
+        expected = [(0,)]
+        self.assertEqual(expected, result)
+
+    def test_show_count_of_clothes_dirty_valid_input(self):
+        user_id = 1
+        result = DBSearch.show_count_of_clothes_dirty(user_id)
+        expected = [(3,)]
+        self.assertEqual(expected, result)
+
+    def test_show_count_of_clothes_dirty_invalid_input(self):
+        user_id = 100
+        result = DBSearch.show_count_of_clothes_dirty(user_id)
+        expected = [(0,)]
+        self.assertEqual(expected, result)
+
+    def test_get_all_users_and_ids_if_returns_all(self):
+        """This function is always returning a list of all created users and their ids, regardless of existing / non-existing username
+        - so only 1 test has been created"""
+        result = DBSearch.get_all_users_and_ids()
+        expected = [(1, 'Anna'), (2, 'Maria'), (3, 'Jenny'), (4, 'Lucy')]
+        self.assertEqual(expected, result)
+
+    def test_get_location_valid_input(self):
+        user_id = 1
+        result = DBSearch.get_location(user_id)
+        expected = [('Warsaw', 52.23, 21.01)]
+        self.assertEqual(expected, result)
+
+    def test_get_location_invalid_input(self):
+        user_id = 100
+        result = DBSearch.get_location(user_id)
+        expected = []
+        self.assertEqual(expected, result)
 
 if __name__ == '__main__':
     main()
-
 
