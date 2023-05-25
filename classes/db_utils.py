@@ -363,6 +363,4 @@ class DBSearch:
             cursor.close()
 
 
-search = DBSearch
-search.add_item_ID(1)
-search.add_item_to_wardrobe(189, "b", "c", "d", "f", "r")
+
