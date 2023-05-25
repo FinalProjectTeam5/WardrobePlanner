@@ -20,7 +20,8 @@ def add_item(item_id):
 
 def delete_item():
     item_to_delete = input("Please enter the description of an item you'd like to remove: ")
-    DBSearch.delete_item_from_wardrobe(item_to_delete)
+    item_to_delete_id = DBSearch.get_item_id(item_to_delete)[0][0]
+    DBSearch.delete_item_from_wardrobe(item_to_delete_id)
     return "{} has been deleted from your wardrobe".format(item_to_delete)
 
 
