@@ -2,7 +2,7 @@ from WardrobePlanner.classes.db_utils import DBSearch
 # from WardrobePlanner.classes.item import Item
 from WardrobePlanner.classes.dashboard_class import Dashboard
 from WardrobePlanner.functions.friends import add_friend, delete_friend, show_friends_list
-from WardrobePlanner.functions.manage_wardrobe import add_item, delete_item, laundry, add_item_id
+from WardrobePlanner.functions.manage_wardrobe import add_item, delete_item, laundry, add_item_id, notification_laundry
 from WardrobePlanner.functions.search.tag_prompts import prompt_user, formatting_tags
 from WardrobePlanner.functions.search.results_handling import display_results, what_user_wants_to_do_with_the_results
 
@@ -81,6 +81,7 @@ def dashboard(user):
         # Delete items
 
         elif sub_dashboard_3_choice == 3:
+            print(notification_laundry(user.user_id))
             laundry_decision = laundry(user.user_id)
             print(laundry_decision)
             return dashboard(user)

@@ -26,9 +26,15 @@ def delete_item():
 
 
 def laundry(user_id):
-    wanna_do_laundry = input("Do you want to clean all your clothes? Y/y \n")
-    if wanna_do_laundry in ["y", "Y"]:
+    wanna_do_laundry = input("Do you want to clean all your clothes? y/n \n")
+    if wanna_do_laundry == "y":
         DBSearch.do_laundry(user_id)
         return "All of your clothes are clean now!"
     else:
         return "Ok, maybe later."
+
+
+def notification_laundry(user_id):
+    return "You have {} available clothes, and {} dirty clothes. "\
+        .format(DBSearch.show_count_of_clothes_available(user_id)[0][0],
+                DBSearch.show_count_of_clothes_dirty(user_id)[0][0])
