@@ -23,6 +23,15 @@ def display_results(results, user):
         print("{}. {}, item belongs to {}".format(counter, result[0], whose))
     return options
 
+def establishing_ownership(user, chosen_item):
+    users_with_id = DBSearch.get_all_users_and_ids()
+    if chosen_item[2] == user.user_id:
+        return "you"
+    else:
+        for u in users_with_id:
+            if chosen_item[2] == u[0]:
+                return u[1]
+
 
 def what_user_wants_to_do_with_the_results(results, counter, user):
     options_count = results_handling.generate_menu()
@@ -34,7 +43,8 @@ def what_user_wants_to_do_with_the_results(results, counter, user):
                 chosen_item_index = counter.index(int(choose_item))
                 print(chosen_item_index)
                 chosen_item = results[chosen_item_index]
-                return chosen_item
+                owner_wardrobe = establishing_ownership(user, chosen_item)
+                return [chosen_item, owner_wardrobe]
             else:
                 print("You didn't choose a number from the list. Try again!")
     else:

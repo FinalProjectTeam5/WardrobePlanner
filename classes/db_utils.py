@@ -109,7 +109,6 @@ class DBSearch:
         finally:
             cursor.close()
 
-    # is this function nescessary?
     @staticmethod
     def get_user_id(username):
         try:
@@ -174,14 +173,29 @@ class DBSearch:
         except Exception:
             raise NoConnection
         else:
+            cursor.execute("""
+                   SELECT u1.user_id, u1.user_name
+                   FROM users AS u1
+                   INNER JOIN friends AS f ON u1.user_id = f.friend_id
+                   INNER JOIN users AS u2 ON f.user_id = u2.user_id
+                   WHERE u2.user_id = %s
+                   AND u1.user_id <> %s
+                   ORDER BY u2.user_id;
+               """, [user_id, user_id])
+            result = cursor.fetchall()
+            return result
+        finally:
+            cursor.close()
 
-            cursor.execute("""SELECT u1.user_id, u1.user_name FROM users AS u1" \
-                    "INNER JOIN friends AS f ON u1.user_id = f.user_id" \
-                    "INNER JOIN users AS u2 ON f.friend_id = u2.user_id" \
-                    "WHERE u2.user_id in (%s)" \
-                    "AND u1.user_id <> %s" \
-                    "ORDER BY u2.user_id;""",
-                           [user_id])
+    @staticmethod
+    def get_all_users_and_ids():
+        try:
+            db_connection = connect_to_db()
+            cursor = db_connection.cursor()
+        except Exception:
+            raise NoConnection
+        else:
+            cursor.execute("""SELECT user_ID, user_name FROM wardrobe_planner.users;""")
             result = cursor.fetchall()
             return result
         finally:
@@ -238,6 +252,21 @@ class DBSearch:
             db_connection.commit()
         finally:
             cursor.close()
+
+    @staticmethod
+    def change_to_dirty(item_id):
+        try:
+            db_connection = connect_to_db()
+            cursor = db_connection.cursor()
+        except Exception:
+            raise NoConnection
+        else:
+            cursor.execute("""UPDATE availability_status SET item_status = 'dirty' WHERE item_ID = %s ;""", [item_id])
+            db_connection.commit()
+        finally:
+            cursor.close()
+
+
 
     # items
 
@@ -315,19 +344,6 @@ class DBSearch:
         finally:
             cursor.close()
 
-    @staticmethod
-    def get_all_users_and_ids():
-        try:
-            db_connection = connect_to_db()
-            cursor = db_connection.cursor()
-        except Exception:
-            raise NoConnection
-        else:
-            cursor.execute("""SELECT user_ID, user_name FROM wardrobe_planner.users;""")
-            result = cursor.fetchall()
-            return result
-        finally:
-            cursor.close()
 
     # this functions probably needs to be reworked into something else
     @staticmethod

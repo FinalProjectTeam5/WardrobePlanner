@@ -3,17 +3,13 @@ from WardrobePlanner.classes.db_utils import DBSearch
 from WardrobePlanner.classes.dashboard_class import Dashboard
 from WardrobePlanner.functions.friends import add_friend, delete_friend, show_friends_list
 from WardrobePlanner.functions.manage_wardrobe import add_item, delete_item, laundry, add_item_id
-from WardrobePlanner.functions.search.tag_prompts import prompt_user, formatting_tags
-from WardrobePlanner.functions.search.results_handling import display_results, what_user_wants_to_do_with_the_results
+from WardrobePlanner.functions.search.search_dashboard import search_dashboard
 
 
 mainDashboard = Dashboard("on the Main Dashboard",
                           ["Show User Info", "Search Wardrobe", "Manage Wardrobe", "Manage Friends",
                            "Log Out / Exit"])
 
-searchDashboard = Dashboard("in Search", ["Search all available",
-                                          "Search through tags",
-                                          "Back to main dashboard"])
 
 manageWardrobeDashboard = Dashboard("in Manage Wardrobe", ["Add Items To Your Wardrobe",
                                                            "Delete Items From Your Wardrobe",
@@ -43,24 +39,9 @@ def dashboard(user):
         return dashboard(user)
 
     elif dashboard_choice == 2:
-        options_count = searchDashboard.generate_menu()
-        sub_dashboard_2_choice = searchDashboard.get_users_choice(options_count)
-        if sub_dashboard_2_choice == 1:
-            tags = ""
-            search_results = DBSearch.search_clothes(tags, user.user_id)
-            number_of_results = display_results(search_results, user)
-            decision = what_user_wants_to_do_with_the_results(search_results, number_of_results, user)
-            print(search_results)
-        elif sub_dashboard_2_choice == 2:
-            user_tags = prompt_user(user)
-            tags = formatting_tags(user_tags)
-            print(tags)
-            search_results = DBSearch.search_clothes(tags, user.user_id)
-            number_of_results = display_results(search_results, user)
-            decision = what_user_wants_to_do_with_the_results(search_results, number_of_results, user)
-            print(search_results)
-        else:
-            return dashboard(user)
+        # Search the wardrobe
+        search_dashboard(user)
+        return dashboard(user)
 
     elif dashboard_choice == 3:
         # Managing the wardrobe
