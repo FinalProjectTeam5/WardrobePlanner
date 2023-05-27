@@ -375,3 +375,5 @@ class DBSearch:
             return result
         finally:
             cursor.close()
+
+
