@@ -1,5 +1,6 @@
 from unittest import TestCase, main, mock
-from WardrobePlanner.classes.db_utils import DBSearch
+from unittest.mock import patch
+from WardrobePlanner.classes.db_utils import DBSearch, connect_to_db
 
 
 class Test_DBUtils(TestCase):
@@ -7,7 +8,7 @@ class Test_DBUtils(TestCase):
         """This function is always returning a list of all created users, regardless of existing / non-existing username
         - so only 1 test has been created"""
         username = "Anna"
-        result = DBSearch.username_check(username)
+        result = DBSearch.username_check()
         expected = [('Anna',), ('Maria',), ('Jenny',), ('Lucy',)]
         self.assertEqual(expected, result)
 
@@ -62,7 +63,7 @@ class Test_DBUtils(TestCase):
     def test_get_friends_list_valid_input(self):
         user_id = 1
         result = DBSearch.get_friends_list(user_id)
-        expected = [(2, 'Maria'), (3, 'Jenny')]
+        expected = [(2, 'Maria'), (3, 'Jenny'), (4, 'Lucy')]
         self.assertEqual(expected, result)
 
     def test_get_friends_list_invalid_input(self):
@@ -114,6 +115,173 @@ class Test_DBUtils(TestCase):
         expected = []
         self.assertEqual(expected, result)
 
+
+
+
+    @patch('WardrobePlanner.classes.db_utils.connect_to_db')
+    def test_create_new_user(self, mock_connect_to_db):
+        # Mock the return value of connect_to_db
+        mock_db_connection = mock_connect_to_db.return_value
+        mock_cursor = mock_db_connection.cursor.return_value
+
+        # Call the function with test data
+        username = 'Tina'
+        password = 'Strong'
+        DBSearch.create_new_user(username, password)
+
+        # Assert that the expected methods are called
+        mock_connect_to_db.assert_called_once()
+        mock_db_connection.cursor.assert_called_once()
+        mock_cursor.execute.assert_called_once_with(
+            """INSERT INTO users (user_name, user_password) VALUES (%s, %s);""",
+            [username, password]
+        )
+        mock_db_connection.commit.assert_called_once()
+        mock_cursor.close.assert_called_once()
+
+
+    @patch('WardrobePlanner.classes.db_utils.connect_to_db')
+    def test_set_hometown(self, mock_connect_to_db):
+        # Mock the return value of connect_to_db
+        mock_db_connection = mock_connect_to_db.return_value
+        mock_cursor = mock_db_connection.cursor.return_value
+
+        # Call the function with test data
+        user_id = 2
+        hometown = "Warsaw"
+        lat = 52.23
+        long = 21.01
+        DBSearch.set_hometown(user_id, hometown, lat, long)
+
+        # Assert that the expected methods are called
+        mock_connect_to_db.assert_called_once()
+        mock_db_connection.cursor.assert_called_once()
+        mock_cursor.execute.assert_called_once_with(
+            """INSERT INTO user_location (user_id, home_town, latitude, longitude) VALUES (%s, %s, %s, %s);""",
+                [user_id, hometown, lat, long])
+
+        mock_db_connection.commit.assert_called_once()
+        mock_cursor.close.assert_called_once()
+
+    @patch('WardrobePlanner.classes.db_utils.connect_to_db')
+    def test_add_to_friend_list(self, mock_connect_to_db):
+        # Mock the return value of connect_to_db
+        mock_db_connection = mock_connect_to_db.return_value
+        mock_cursor = mock_db_connection.cursor.return_value
+
+        # Call the function with test data
+        user_id = 1
+        friend_id = 4
+
+        DBSearch.add_to_friend_list(user_id, friend_id)
+
+        # Assert that the expected methods are called
+        mock_connect_to_db.assert_called_once()
+        mock_db_connection.cursor.assert_called_once()
+        mock_cursor.execute.assert_called_once_with(
+            """INSERT INTO friends (user_id, friend_id) VALUES (%s, %s)""", [user_id, friend_id])
+
+        mock_db_connection.commit.assert_called_once()
+        mock_cursor.close.assert_called_once()
+
+    @patch('WardrobePlanner.classes.db_utils.connect_to_db')
+    def test_delete_from_friend_list(self, mock_connect_to_db):
+        # Mock the return value of connect_to_db
+        mock_db_connection = mock_connect_to_db.return_value
+        mock_cursor = mock_db_connection.cursor.return_value
+
+        # Call the function with test data
+        user_id = 1
+        friend_id = 4
+
+        DBSearch.delete_from_friend_list(friend_id, user_id)
+
+        # Assert that the expected methods are called
+        mock_connect_to_db.assert_called_once()
+        mock_db_connection.cursor.assert_called_once()
+        mock_cursor.execute.assert_called_once_with(
+            """DELETE FROM friends AS f WHERE f.friend_id = %s AND f.user_id = %s""",
+                           [friend_id, user_id])
+
+        mock_db_connection.commit.assert_called_once()
+        mock_cursor.close.assert_called_once()
+
+    @patch('WardrobePlanner.classes.db_utils.connect_to_db')
+    def test_do_laundry(self, mock_connect_to_db):
+        # Mock the return value of connect_to_db
+        mock_db_connection = mock_connect_to_db.return_value
+        mock_cursor = mock_db_connection.cursor.return_value
+
+        # Call the function with test data
+        user_id = 1
+
+        DBSearch.do_laundry(user_id)
+
+        # Assert that the expected methods are called
+        mock_connect_to_db.assert_called_once()
+        mock_db_connection.cursor.assert_called_once()
+        mock_cursor.execute.assert_called_once_with("""UPDATE availability_status AS a
+                                    INNER JOIN ownership AS o ON a.item_id = o.item_id
+                                    SET item_status = 'available'
+                                    WHERE a.item_status = 'dirty'
+                                    AND o.owner_id = %s;""", [user_id])
+
+        mock_db_connection.commit.assert_called_once()
+        mock_cursor.close.assert_called_once()
+
+    @patch('WardrobePlanner.classes.db_utils.connect_to_db')
+    def test_add_item_to_wardrobe(self, mock_connect_to_db):
+        # Mock the return value of connect_to_db
+        mock_db_connection = mock_connect_to_db.return_value
+        mock_cursor = mock_db_connection.cursor.return_value
+
+        # Call the function with test data
+        item_id = 200
+        item_type = "bottom"
+        item_description = "orange flower skirt"
+        weather_tag = "mild"
+        occasion_tag = "work"
+        mood_tag = "cheerful"
+
+
+        DBSearch.add_item_to_wardrobe(item_id, item_type, item_description, weather_tag, occasion_tag, mood_tag)
+
+        # Assert that the expected methods are called
+        mock_connect_to_db.assert_called_once()
+        mock_db_connection.cursor.assert_called_once()
+        mock_cursor.execute.assert_called_once_with("""INSERT INTO clothes 
+                                (item_ID, item_type, item_description, weather_tag, occasion_tag, mood_tag) 
+                                VALUES (%s,%s,%s,%s,%s,%s);""",
+                           [item_id, item_type, item_description, weather_tag, occasion_tag, mood_tag])
+
+        mock_db_connection.commit.assert_called_once()
+        mock_cursor.close.assert_called_once()
+
+    @patch('WardrobePlanner.classes.db_utils.connect_to_db')
+    def test_delete_item_from_wardrobe(self, mock_connect_to_db):
+        # Mock the return value of connect_to_db
+        mock_db_connection = mock_connect_to_db.return_value
+        mock_cursor = mock_db_connection.cursor.return_value
+
+        # Call the function with test data
+        item_id = 6
+
+        DBSearch.delete_item_from_wardrobe(item_id)
+
+        # Assert that the expected methods are called
+        mock_connect_to_db.assert_called_once()
+        mock_db_connection.cursor.assert_called_once()
+        mock_cursor.execute.assert_any_call("""DELETE FROM availability_status AS a WHERE a.item_id = %s;""",
+                                                    [item_id])
+        mock_cursor.execute.assert_any_call("""DELETE FROM clothes AS c WHERE c.item_id = %s;""",
+                                                    [item_id])
+
+        mock_db_connection.commit.assert_called_once()
+        mock_cursor.close.assert_called_once()
+
+
+
 if __name__ == '__main__':
     main()
+
 
