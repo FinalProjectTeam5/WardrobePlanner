@@ -8,7 +8,7 @@ class Test_DBUtils(TestCase):
         """This function is always returning a list of all created users, regardless of existing / non-existing username
         - so only 1 test has been created"""
         username = "Anna"
-        result = DBSearch.username_check(username)
+        result = DBSearch.username_check()
         expected = [('Anna',), ('Maria',), ('Jenny',), ('Lucy',)]
         self.assertEqual(expected, result)
 
