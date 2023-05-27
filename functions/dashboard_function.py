@@ -64,9 +64,12 @@ def dashboard(user):
 
         elif sub_dashboard_3_choice == 3:
             print(notification_laundry(user.user_id))
-            laundry_decision = laundry(user.user_id)
-            print(laundry_decision)
-            return dashboard(user)
+            if notification_laundry(user.user_id) == "You have no dirty clothes":
+                return dashboard(user)
+            else:
+                laundry_decision = laundry(user.user_id)
+                print(laundry_decision)
+                return dashboard(user)
         # Do laundry
 
     elif dashboard_choice == 4:

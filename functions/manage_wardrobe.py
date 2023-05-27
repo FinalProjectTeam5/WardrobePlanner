@@ -35,6 +35,9 @@ def laundry(user_id):
 
 
 def notification_laundry(user_id):
-    return "You have {} available clothes, and {} dirty clothes. "\
+    notif = "You have {} available clothes, and {} dirty clothes. "\
         .format(DBSearch.show_count_of_clothes_available(user_id)[0][0],
                 DBSearch.show_count_of_clothes_dirty(user_id)[0][0])
+    if DBSearch.show_count_of_clothes_dirty(user_id)[0][0] == 0:
+        notif = "You have no dirty clothes"
+    return notif

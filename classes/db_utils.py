@@ -268,8 +268,6 @@ class DBSearch:
         finally:
             cursor.close()
 
-
-
     # items
 
     @staticmethod
@@ -344,7 +342,6 @@ class DBSearch:
         finally:
             cursor.close()
 
-
     # It's important for delete_item function
     @staticmethod
     def get_item_id(item_description):
@@ -355,20 +352,6 @@ class DBSearch:
             raise NoConnection
         else:
             cursor.execute("""SELECT item_id FROM clothes WHERE item_description = %s""", [item_description])
-            result = cursor.fetchall()
-            return result
-        finally:
-            cursor.close()
-
-    @staticmethod
-    def get_all_users_and_ids():
-        try:
-            db_connection = connect_to_db()
-            cursor = db_connection.cursor()
-        except Exception:
-            raise NoConnection
-        else:
-            cursor.execute("""SELECT user_ID, user_name FROM wardrobe_planner.users;""")
             result = cursor.fetchall()
             return result
         finally:
@@ -392,4 +375,3 @@ class DBSearch:
             return result
         finally:
             cursor.close()
-
