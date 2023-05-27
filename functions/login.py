@@ -55,7 +55,7 @@ def get_new_username():
 
 def get_new_password():
     password = input("Your password: ")
-    if password == get_new_username():
+    if password == get_new_username:
         print("Your password can't be the same as your username!")
         return get_new_password()
     elif len(password) < 4 or len(password) > 20:
