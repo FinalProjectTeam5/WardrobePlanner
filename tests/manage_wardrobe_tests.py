@@ -12,7 +12,7 @@ class ManageWardrobeTesting(TestCase):
     def test_delete_item_valid(self):
         mock.item_to_delete_id = 2
         with mock.patch('builtins.input', side_effect=[1]), mock.patch(
-                'WardrobePlanner.classes.db_utils.DBSearch.delete_item_from_wardrobe'), mock.patch(
+                'WardrobePlanner.classes.db_utils.DBSearch.delete_item_from_wardrobe', return_value=["Done"]), mock.patch(
                 'WardrobePlanner.classes.db_utils.DBSearch.get_item_id'):
             self.assertTrue(delete_item())
 
