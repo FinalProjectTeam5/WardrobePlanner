@@ -176,7 +176,6 @@ class DBSearch:
             raise NoConnection
         else:
             cursor.execute("""
-<<<<<<< HEAD
                 SELECT u1.user_id, u1.user_name
                 FROM users AS u1
                 INNER JOIN friends AS f ON u1.user_id = f.friend_id
@@ -185,15 +184,6 @@ class DBSearch:
                 AND u1.user_id <> %s
                 ORDER BY u2.user_id;
             """, [user_id, user_id])
-=======
-                   SELECT u1.user_id, u1.user_name
-                   FROM users AS u1
-                   INNER JOIN friends AS f ON u1.user_id = f.friend_id
-                   INNER JOIN users AS u2 ON f.user_id = u2.user_id
-                   WHERE u2.user_id = %s
-                   AND u1.user_id <> %s
-                   ORDER BY u2.user_id;
-               """, [user_id, user_id])
             result = cursor.fetchall()
             return result
         finally:
@@ -208,7 +198,6 @@ class DBSearch:
             raise NoConnection
         else:
             cursor.execute("""SELECT user_ID, user_name FROM wardrobe_planner.users;""")
->>>>>>> not_merged_with_adding_to_main
             result = cursor.fetchall()
             return result
         finally:
@@ -355,7 +344,7 @@ class DBSearch:
         finally:
             cursor.close()
 
-<<<<<<< HEAD
+
     # It's important for delete_item function
     @staticmethod
     def get_item_id(item_description):
@@ -384,11 +373,8 @@ class DBSearch:
             return result
         finally:
             cursor.close()
-=======
->>>>>>> not_merged_with_adding_to_main
 
     # this functions probably needs to be reworked into something else
-
     @staticmethod
     def show_all_user_clothes(user_id):
         try:
@@ -406,9 +392,4 @@ class DBSearch:
             return result
         finally:
             cursor.close()
-<<<<<<< HEAD
-=======
 
-
-
->>>>>>> not_merged_with_adding_to_main
