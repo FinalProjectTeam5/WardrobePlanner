@@ -13,7 +13,7 @@ def add_friend(user_id):
             DBSearch.add_to_friend_list(user_id, friend_id)
             return "{} has been added to your friend list.".format(friend_username)
     except IndexError:
-        print("Sorry, that isn't a valid user. Please try again.")
+        return "Sorry, that isn't a valid user. Please try again."
 
 
 def show_friends_list(user_id):
@@ -29,5 +29,5 @@ def delete_friend(user_id):
         DBSearch.delete_from_friend_list(friend_id, user_id)
         return "{} has been deleted from your friend list.".format(friend_username)
     except IndexError:
-        print("Sorry, that isn't a valid user. Please try again.")
+        return "Sorry, that isn't a valid user. Please try again."
 
