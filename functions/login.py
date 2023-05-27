@@ -1,18 +1,31 @@
 from WardrobePlanner.classes.db_utils import DBSearch
-from WardrobePlanner.functions.identifying_the_city_and_getting_coordinates import getting_hometown
+from WardrobePlanner.functions.date_and_geolocation.identifying_the_city_and_getting_coordinates import getting_hometown
 
 
 def sign_up():
     username = get_new_username()
     password = get_new_password()
-    hometown = getting_hometown()
-    user_dict = {
-        "username": username,
-        "password": password,
-        "hometown": hometown[0],
-        "latitude": hometown[1][0],
-        "longitude": hometown[1][0]
-    }
+    hometown = "again"
+    while hometown == "again":
+        hometown = getting_hometown()
+        print(hometown)
+
+    if hometown == False:
+        user_dict = {
+            "username": username,
+            "password": password,
+            "hometown": None,
+            "latitude": None,
+            "longitude": None
+        }
+    else:
+        user_dict = {
+            "username": username,
+            "password": password,
+            "hometown": hometown[0],
+            "latitude": hometown[1][0],
+            "longitude": hometown[1][0]
+        }
     print(user_dict)
     DBSearch.create_new_user(user_dict["username"], user_dict["password"])
     user_id = DBSearch.get_user_id(username)[0][0]

@@ -1,4 +1,5 @@
 from WardrobePlanner.functions.api_requests import getting_temperature_today
+from WardrobePlanner.functions.search.pre_search_notifications import generate_no_hometown_notification
 
 
 tags_dict = {"weather_tag": ["freezing", "cold", "mild", "warm", "hot"],
@@ -27,7 +28,10 @@ def users_choices(tag_list_name):
             print("Sorry that's not a number from the requested range, try again!")
 
 
-def whether_weather():
+def whether_weather(user):
+    if len(generate_no_hometown_notification(user)) > 0:
+        print(generate_no_hometown_notification(user))
+        return False
     while True:
         try:
             user_choice = input("Do you want to factor in the weather? (y/n)\n_")
@@ -49,7 +53,7 @@ def prompt_user(user):
     print("What are you feeling like today?")
     mood = users_choices("mood_tag")
     input_list.append(mood)
-    if whether_weather():
+    if whether_weather(user):
         temperature = getting_temperature_today(user)
         if temperature < 0:
             weather = tags_dict["weather_tag"][0]

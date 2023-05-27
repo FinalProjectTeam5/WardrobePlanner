@@ -8,7 +8,7 @@ def getting_hometown():
     while True:
         user_typed_hometown = input("If you want to use the weather tags in your wardrobe searches please provide your hometown.\n"
                             "  - type the town name in your native tongue or in a Latin transcription\n"
-                            "  - if the api didn't find your hometown on first attempt, try the name of the nearest bigger town instead\n"
+                            "  - if the API didn't find your hometown on first attempt, try the name of the nearest bigger town instead\n"
                             "\n"
                             "Your hometown: ")
         user_hometown_choice = hometown_input_check(user_typed_hometown)
@@ -27,12 +27,15 @@ def getting_hometown():
                 break
             else:
                 print("Please choose an option from the list. Try again.")
-        if int(hometown) == len(city_list):
-            return
-        elif int(hometown) == len(city_list) - 1:
-            pass
+        if int(hometown) == len(city_list) - 1:
+            print(len(city_list) -1)
+            return "again"
+        elif int(hometown) == len(city_list):
+            print(len(city_list))
+            return False
         else:
             hometown = list_prep[int(hometown) - 1]
+            print(hometown)
             return hometown
 
 
