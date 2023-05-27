@@ -26,12 +26,18 @@ def delete_item():
 
 
 def laundry(user_id):
-    wanna_do_laundry = input("Do you want to clean all your clothes? y/n \n")
-    if wanna_do_laundry == "y":
-        DBSearch.do_laundry(user_id)
-        return "All of your clothes are clean now!"
-    else:
-        return "Ok, maybe later."
+    while True:
+        try:
+            wanna_do_laundry = input("Do you want to clean all your clothes? y/n \n")
+            if wanna_do_laundry.lower() == "y":
+                DBSearch.do_laundry(user_id)
+                return "All of your clothes are clean now!"
+            elif wanna_do_laundry.lower() == "n":
+                return "Ok, maybe later."
+            else:
+                raise ValueError("Please type y/n. Try again.")
+        except ValueError:
+            print("Please type y/n. Try again.")
 
 
 def notification_laundry(user_id):
