@@ -1,7 +1,6 @@
-
 from unittest import TestCase, main, mock
-from unittest.mock import patch
-from WardrobePlanner.functions.manage_wardrobe import add_item, delete_item
+import unittest
+from WardrobePlanner.functions.manage_wardrobe import add_item, delete_item, laundry
 
 
 class ManageWardrobeTesting(TestCase):
@@ -18,4 +17,17 @@ class ManageWardrobeTesting(TestCase):
             self.assertTrue(delete_item())
 
 
+class TestLaundry(TestCase):
+    def test_laundry_clean_clothes(self):
+        with mock.patch('builtins.input', side_effect=['y']), mock.patch(
+                'WardrobePlanner.classes.db_utils.DBSearch.do_laundry', return_value=["Done"]):
+            self.assertEqual("All of your clothes are clean now!", laundry(1))
 
+    def test_laundry_skip_cleaning(self):
+        with mock.patch('builtins.input', side_effect=['n']), mock.patch(
+                'WardrobePlanner.classes.db_utils.DBSearch.do_laundry', return_value=["Done"]):
+            self.assertEqual("Ok, maybe later.", laundry(1))
+
+
+if __name__ == '__main__':
+    unittest.main()
