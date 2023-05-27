@@ -4,7 +4,7 @@ from WardrobePlanner.functions.date_and_geolocation.identifying_the_city_and_get
 
 def sign_up():
     username = get_new_username()
-    password = get_new_password()
+    password = get_new_password(username)
     hometown = "again"
     while hometown == "again":
         hometown = getting_hometown()
@@ -53,14 +53,14 @@ def get_new_username():
             return username
 
 
-def get_new_password():
+def get_new_password(username):
     password = input("Your password: ")
-    if password == get_new_username:
+    if password == username:
         print("Your password can't be the same as your username!")
-        return get_new_password()
+        return get_new_password(username)
     elif len(password) < 4 or len(password) > 20:
         print("Sorry, your password should be between 4 and 20 characters long.\n Try again.")
-        return get_new_password()
+        return get_new_password(username)
     else:
         return password
 
