@@ -1,8 +1,7 @@
-
 # from WardrobePlanner.classes.item import Item
 from WardrobePlanner.classes.dashboard_class import Dashboard
-from WardrobePlanner.functions.friends import add_friend, delete_friend, show_friends_list
-from WardrobePlanner.functions.manage_wardrobe import add_item, delete_item, laundry, add_item_id, notification_laundry
+from WardrobePlanner.functions.manage_wardrobe_dashboard import manage_wardrobe_dashboard
+from WardrobePlanner.functions.manage_friends_dashboard import manage_friends_dashboard
 from WardrobePlanner.functions.search.search_dashboard import search_dashboard
 
 
@@ -10,17 +9,6 @@ from WardrobePlanner.functions.search.search_dashboard import search_dashboard
 mainDashboard = Dashboard("on the Main Dashboard",
                           ["Show User Info", "Search Wardrobe", "Manage Wardrobe", "Manage Friends",
                            "Log Out / Exit"])
-
-
-manageWardrobeDashboard = Dashboard("in Manage Wardrobe", ["Add Items To Your Wardrobe",
-                                                           "Delete Items From Your Wardrobe",
-                                                           "Do Laundry",
-                                                           "Back to main dashboard"])
-
-manageFriendsDashboard = Dashboard("in Manage Friends", ["Show Friends",
-                                                         "Add Friends",
-                                                         "Delete Friends",
-                                                         "Back to main dashboard"])
 
 
 def dashboard(user):
@@ -46,56 +34,15 @@ def dashboard(user):
 
     elif dashboard_choice == 3:
         # Managing the wardrobe
-        options_count = manageWardrobeDashboard.generate_menu()
-        sub_dashboard_3_choice = manageWardrobeDashboard.get_users_choice(options_count)
-
-        if sub_dashboard_3_choice == 1:
-            item_id = add_item_id(user.user_id)[0][0]
-            item_added = add_item(item_id)
-            print(item_added)
-            return dashboard(user)
-        # Add items to wardrobe
-
-        elif sub_dashboard_3_choice == 2:
-            item_deleted = delete_item()
-            print(item_deleted)
-            return dashboard(user)
-        # Delete items
-
-        elif sub_dashboard_3_choice == 3:
-            print(notification_laundry(user.user_id))
-            if notification_laundry(user.user_id) == "You have no dirty clothes":
-                return dashboard(user)
-            else:
-                laundry_decision = laundry(user.user_id)
-                print(laundry_decision)
-                return dashboard(user)
-        # Do laundry
+        manage_wardrobe_dashboard(user)
+        return dashboard(user)
 
     elif dashboard_choice == 4:
         # Managing friends
-        options_count = manageFriendsDashboard.generate_menu()
-        sub_dashboard_4_choice = manageFriendsDashboard.get_users_choice(options_count)
-
-        if sub_dashboard_4_choice == 1:
-            friend_list = show_friends_list(user.user_id)
-            print(friend_list)
-            return dashboard(user)
-        # Show friends
-
-        elif sub_dashboard_4_choice == 2:
-            friend_added = add_friend(user.user_id)
-            print(friend_added)
-            return dashboard(user)
-        # Add friends
-
-        elif sub_dashboard_4_choice == 3:
-            friend_deleted = delete_friend(user.user_id)
-            print(friend_deleted)
-            return dashboard(user)
-        # Delete friends
+        manage_friends_dashboard(user)
+        return dashboard(user)
 
     elif dashboard_choice == 5:
-        # Exits the dashboard and returns to main; can log in again
+        # Exits the program
         quit()
         return
