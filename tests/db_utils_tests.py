@@ -63,7 +63,7 @@ class Test_DBUtils(TestCase):
     def test_get_friends_list_valid_input(self):
         user_id = 1
         result = DBSearch.get_friends_list(user_id)
-        expected = [(2, 'Maria'), (3, 'Jenny')]
+        expected = [(2, 'Maria'), (3, 'Jenny'), (4, 'Lucy')]
         self.assertEqual(expected, result)
 
     def test_get_friends_list_invalid_input(self):
