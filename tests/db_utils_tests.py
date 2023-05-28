@@ -9,7 +9,7 @@ class Test_DBUtils(TestCase):
         - so only 1 test has been created"""
         username = "Anna"
         result = DBSearch.username_check()
-        expected = [('Anna',), ('Maria',), ('Jenny',), ('Lucy',)]
+        expected = [('Anna',), ('Maria',), ('Jenny',), ('Lucy',), ('Kim',), ('Olga',)]
         self.assertEqual(expected, result)
 
     def test_password_check_valid_input(self):
@@ -106,7 +106,7 @@ class Test_DBUtils(TestCase):
     def test_get_location_valid_input(self):
         user_id = 1
         result = DBSearch.get_location(user_id)
-        expected = [('Warsaw', 52.23, 21.01)]
+        expected = [('Warszawa, województwo mazowieckie, Polska', 52.23, 21.01)]
         self.assertEqual(expected, result)
 
     def test_get_location_invalid_input(self):
