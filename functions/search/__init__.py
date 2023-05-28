@@ -1,3 +1,4 @@
 from .results_handling import display_results, what_user_wants_to_do_with_the_results
 from .tag_prompts import prompt_user, formatting_tags
 from .pre_search_notifications import generate_no_search_possible_notification, generate_no_hometown_notification
+from .api_requests import getting_temperature_today

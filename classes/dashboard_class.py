@@ -24,6 +24,16 @@ class Dashboard:
                 print("Sorry that's not a number, try again!")
 
 
+class Menu(Dashboard):
+    # because Menu inherits from Dashboard, the variable is called 'location'
+    # in this case, the 'location' should be the text that will print before the options of the menu are displayed
+    def generate_menu(self):
+        print("{}".format(self.location))
+        counter = 0
+        for option in self.options:
+            counter += 1
+            print("{}. {}".format(counter, option))
+        return counter
 
 
 

@@ -1,4 +1,4 @@
-from WardrobePlanner.functions.api_requests import getting_temperature_today
+from WardrobePlanner.functions.search.api_requests import getting_temperature_today
 from WardrobePlanner.functions.search.pre_search_notifications import generate_no_hometown_notification
 
 
@@ -9,12 +9,7 @@ tags_dict = {"weather_tag": ["freezing", "cold", "mild", "warm", "hot"],
              }
 
 
-def users_choices(tag_list_name):
-    counter = 1
-    for option in tags_dict[tag_list_name]:
-        print("{}. {}".format(counter, option))
-        counter += 1
-    print("{}. n/a".format(counter))
+def user_choices_input(tag_list_name, counter):
     while True:
         try:
             user_choice = int(input("\n_"))
@@ -26,6 +21,15 @@ def users_choices(tag_list_name):
                 print("Please choose an option from the list. Try again.")
         except ValueError:
             print("Sorry that's not a number from the requested range, try again!")
+
+
+def users_choices(tag_list_name):
+    counter = 1
+    for option in tags_dict[tag_list_name]:
+        print("{}. {}".format(counter, option))
+        counter += 1
+    print("{}. n/a".format(counter))
+    return user_choices_input(tag_list_name, counter)
 
 
 def whether_weather(user):
@@ -72,7 +76,7 @@ def prompt_user(user):
 
 
 def formatting_tags(tag_list):
-    if tag_list[1] == "":
+    if tag_list[0] == "":
         occasion_tag = ""
     else:
         occasion_tag = " AND c.occasion_tag = '{}' ".format(tag_list[0])

@@ -20,11 +20,7 @@ def main():
                 user_data = DBSearch.get_user_info(username)
                 user_id = user_data[0][0]
                 user_location = DBSearch.get_location(user_id)
-                # print(user_data)
-                print(user_location[0][1])
-                # We use user_data to create a user object, gonna have to change the home_town part
                 user = User(user_data[0][0], user_data[0][1], user_data[0][2], user_location[0][0], user_location[0][1], user_location[0][2])
-                print(user.user_id, user.username, user.latitude, user.longitude)
                 break
             elif lets_start == "2":
                 # We use the signup function from login file to create a new user

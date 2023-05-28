@@ -16,11 +16,10 @@ def do_search(user, tags):
         return
     number_of_results = display_results(search_results, user)
     decision = what_user_wants_to_do_with_the_results(search_results, number_of_results, user)  # none or chosen item
-    # print(decision)
     if decision is None:
         return
     else:
-        print("You've selected item '{}' that belongs to {}".format(decision[0][0], decision[1]))
+        print("You've selected item '{}' that belongs to {}\n".format(decision[0][0], decision[1]))
         DBSearch.change_to_dirty(decision[0][1])
         return
 

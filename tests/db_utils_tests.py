@@ -3,13 +3,14 @@ from unittest.mock import patch
 from WardrobePlanner.classes.db_utils import DBSearch, connect_to_db
 
 
-class Test_DBUtils(TestCase):
+class TestDBUtils(TestCase):
     def test_username_check_if_returns_all_users(self):
         """This function is always returning a list of all created users, regardless of existing / non-existing username
         - so only 1 test has been created"""
         username = "Anna"
         result = DBSearch.username_check()
         expected = [('Anna',), ('Maria',), ('Jenny',), ('Lucy',), ('Kim',), ('Olga',)]
+
         self.assertEqual(expected, result)
 
     def test_password_check_valid_input(self):
@@ -437,7 +438,8 @@ class Test_DBUtils(TestCase):
         mock_db_connection.cursor.assert_called_once()
         mock_cursor.execute.assert_called_once_with(
             """UPDATE availability_status SET item_status = 'dirty' WHERE item_ID = %s ;""", [item_id])
-
+        mock_cursor.execute.assert_any_call("""DELETE FROM clothes AS c WHERE c.item_id = %s;""",
+                                            [item_id])
         mock_db_connection.commit.assert_called_once()
         mock_cursor.close.assert_called_once()
 
