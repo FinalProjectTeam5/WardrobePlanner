@@ -2,5 +2,4 @@
 
 HOST = "localhost"
 USER = "root"
-PASSWORD = ""
-API_KEY = "[our] API Key"
+PASSWORD = "password"

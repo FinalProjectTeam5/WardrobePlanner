@@ -1,6 +1,6 @@
 # WardrobePlanner
 
-1. Install these Python modules:
+1. Make sure you have Python 3.10.4 or newer installed and install these Python modules:
 
    1. mysql-connector-python – 8.0.33
 
