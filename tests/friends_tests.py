@@ -2,6 +2,7 @@ import unittest
 from unittest import mock
 from WardrobePlanner.functions.friends import add_friend, delete_friend, show_friends_list
 
+
 class FriendsTestCase(unittest.TestCase):
     def test_add_friend_valid(self):
         with mock.patch('builtins.input', side_effect=['Kim']), mock.patch(
