@@ -214,9 +214,10 @@ class TestDBUtils(TestCase):
         # Assert that the expected methods are called
         mock_connect_to_db.assert_called_once()
         mock_db_connection.cursor.assert_called_once()
-        mock_cursor.execute.assert_called_once_with(
+        mock_cursor.execute.assert_any_call(
             """INSERT INTO friends (user_id, friend_id) VALUES (%s, %s)""", [user_id, friend_id])
-
+        mock_cursor.execute.assert_any_call(
+            """INSERT INTO friends (user_id, friend_id) VALUES (%s, %s)""", [friend_id, user_id])
         mock_db_connection.commit.assert_called_once()
         mock_cursor.close.assert_called_once()
 
@@ -235,10 +236,10 @@ class TestDBUtils(TestCase):
         # Assert that the expected methods are called
         mock_connect_to_db.assert_called_once()
         mock_db_connection.cursor.assert_called_once()
-        mock_cursor.execute.assert_called_once_with(
-            """DELETE FROM friends AS f WHERE f.friend_id = %s AND f.user_id = %s""",
-            [friend_id, user_id])
-
+        mock_cursor.execute.assert_any_call(
+            """DELETE FROM friends AS f WHERE f.friend_id = %s AND f.user_id = %s""", [friend_id, user_id])
+        mock_cursor.execute.assert_any_call(
+            """DELETE FROM friends AS f WHERE f.friend_id = %s AND f.user_id = %s""", [user_id, friend_id])
         mock_db_connection.commit.assert_called_once()
         mock_cursor.close.assert_called_once()
 
