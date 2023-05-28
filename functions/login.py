@@ -9,8 +9,6 @@ def sign_up():
     while hometown == "again":
         hometown = getting_hometown()
 
-    print(hometown)
-
     if hometown == False:
         user_dict = {
             "username": username,
@@ -29,6 +27,7 @@ def sign_up():
         }
     DBSearch.create_new_user(user_dict["username"], user_dict["password"])
     user_id = DBSearch.get_user_id(username)[0][0]
+    DBSearch.set_self_as_friend(user_id)
     DBSearch.set_hometown(user_id, user_dict["hometown"], user_dict["latitude"], user_dict["longitude"])
     print("New user created! You can start planning your wardrobe!")
     return

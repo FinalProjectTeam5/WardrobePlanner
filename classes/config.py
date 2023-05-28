@@ -2,5 +2,5 @@
 
 HOST = "localhost"
 USER = "root"
-PASSWORD = "wakuWak0wakuWak0!"
+PASSWORD = "imp0sterSyndrome"
 API_KEY = "[our] API Key"

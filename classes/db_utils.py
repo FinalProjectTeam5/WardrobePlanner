@@ -112,6 +112,21 @@ class DBSearch:
             cursor.close()
 
     @staticmethod
+    def set_self_as_friend(user_id):
+        try:
+            db_connection = connect_to_db()
+            cursor = db_connection.cursor()
+        except Exception:
+            raise NoConnection
+        else:
+            cursor.execute(
+                """INSERT INTO friends (user_ID, friend_ID) VALUES (%s, %s);""",
+                [user_id, user_id])
+            db_connection.commit()
+        finally:
+            cursor.close()
+
+    @staticmethod
     def get_user_id(username):
         try:
             db_connection = connect_to_db()

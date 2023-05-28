@@ -180,6 +180,26 @@ class TestDBUtils(TestCase):
         mock_cursor.close.assert_called_once()
 
     @patch('WardrobePlanner.classes.db_utils.connect_to_db')
+    def test_set_self_as_friend(self, mock_connect_to_db):
+        # Mock the return value of connect_to_db
+        mock_db_connection = mock_connect_to_db.return_value
+        mock_cursor = mock_db_connection.cursor.return_value
+
+        # Call the function with test data
+        user_id = 7
+
+        DBSearch.set_self_as_friend(user_id)
+
+        # Assert that the expected methods are called
+        mock_connect_to_db.assert_called_once()
+        mock_db_connection.cursor.assert_called_once()
+        mock_cursor.execute.assert_called_once_with(
+            """INSERT INTO friends (user_ID, friend_ID) VALUES (%s, %s);""", [user_id, user_id])
+
+        mock_db_connection.commit.assert_called_once()
+        mock_cursor.close.assert_called_once()
+
+    @patch('WardrobePlanner.classes.db_utils.connect_to_db')
     def test_add_to_friend_list(self, mock_connect_to_db):
         # Mock the return value of connect_to_db
         mock_db_connection = mock_connect_to_db.return_value

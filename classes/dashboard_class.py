@@ -15,7 +15,7 @@ class Dashboard:
     def get_users_choice(self, options_count):
         while True:
             try:
-                user_choice = int(input("What would you like to do? (type a number between 1 and {}) \n_".format(options_count)))
+                user_choice = int(input("What would you like to do? (type a number between 1 and {}) \n".format(options_count)))
                 if user_choice <= options_count:
                     return user_choice
                 else:

@@ -25,7 +25,6 @@ def main():
             elif lets_start == "2":
                 # We use the signup function from login file to create a new user
                 sign_up()
-                #break
             elif lets_start == "3":
                 quit()
             else:

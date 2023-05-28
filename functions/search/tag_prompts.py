@@ -12,7 +12,7 @@ tags_dict = {"weather_tag": ["freezing", "cold", "mild", "warm", "hot"],
 def user_choices_input(tag_list_name, counter):
     while True:
         try:
-            user_choice = int(input("\n_"))
+            user_choice = int(input("\n"))
             if int(user_choice) == counter:
                 return ""
             elif 0 < int(user_choice) <= counter - 1:
@@ -38,7 +38,7 @@ def whether_weather(user):
         return False
     while True:
         try:
-            user_choice = input("Do you want to factor in the weather? (y/n)\n_")
+            user_choice = input("Do you want to factor in the weather? (y/n)\n")
             if user_choice.lower() == "y":
                 return True
             elif user_choice.lower() == "n":
