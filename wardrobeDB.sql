@@ -54,16 +54,21 @@ VALUES
  (1, 'Anna', 'MyPassword123'),
  (2, 'Maria', 'Diffi456'),
  (3, 'Jenny', 'SomE56'),
- (4, 'Lucy', 'ProT897')
+ (4, 'Lucy', 'ProT897'),
+ (5, 'Kim', 'kimkim'),
+ (6, 'Olga', 'W0rdPass')
 ;
 
 INSERT INTO user_location (user_ID, home_town, latitude, longitude)
 VALUES
- (1, 'Warsaw', 52.23, 21.01),
- (2, 'Cracow', 50.06, 19.94),
- (3, 'Gdansk', 54.37, 18.61),
- (4, 'Wroclaw', 51.11, 17.03)
-;
+  (1, 'Warszawa, województwo mazowieckie, Polska', 52.23, 21.01),
+ (2, 'Kraków, województwo małopolskie, Polska', 50.06, 19.94),
+ (3, 'Gdańsk, województwo pomorskie, Polska', 54.37, 18.61),
+ (4, 'Wrocław, województwo dolnośląskie, Polska', 51.11, 17.03),
+ (5, NULL, NULL, NULL),
+ (6, 'Львів, Львівська міська громада, Львівський район, Львівська область, Україна', 49.84, 24.03)
+ ;
+
 
 INSERT INTO friends(user_ID, friend_ID)
 VALUES
@@ -251,7 +256,12 @@ VALUES
 (161, 4),
 (162, 4),
 (163, 4),
-(164, 4)
+(164, 4),
+
+(165, 5),
+(166, 5),
+(167, 5),
+(168, 5)
 ;
 
 INSERT INTO clothes(item_ID, item_type, item_description, weather_tag, occasion_tag, mood_tag)
@@ -422,7 +432,12 @@ VALUES
 (161, 'bottom', 'navy midi skirt', 'mild', 'work', 'neutral'),
 (162, 'full body', 'black long dress', 'mild', 'date', 'neutral'),
 (163, 'full body', 'multicolor cotton dress', 'hot', 'work', 'cheerful'),
-(164, 'full body', 'pink cotton dress', 'warm', 'date', 'romantic')
+(164, 'full body', 'pink cotton dress', 'warm', 'date', 'romantic'),
+
+(165, 'bottom', 'flared floral print pants', 'hot', 'party', 'cheerful'),
+(166, 'bottom', 'black skinny jeans', 'cold', 'work', 'neutral'),
+(167, 'full body', 'midi pencil dress', 'cold', 'work', 'serious'),
+(168, 'top', 'navy blue blouse', 'hot', 'party', 'serious') 
 ;
 
 INSERT INTO availability_status (item_ID, item_status)
@@ -591,164 +606,9 @@ VALUES
 (161, 'available'),
 (162, 'available'),
 (163, 'available'),
-(164, 'available')
+(164, 'available'),
+(165, 'available'),
+(166, 'dirty'),
+(167, 'available'),
+(168, 'available')
 ;
-
-
-
--- adding new users. uder_id should be created automatically sice we put it as AUTO_INCREMENT
--- INSERT INTO users (user_name, user_password)
--- VALUES ;
-
--- adding to user_location
--- INSERT INTO user_location (user_ID, home_town, latitude, longitude)
--- VALUES ;
---
---
-
-
--- next step is to show all users with their user_id to enable input for the next step:
--- SELECT user_name, user_ID  FROM users;
-
--- aftrewards we will ask for assigning friends to new user's_id:
--- INSERT INTO friends (user_ID, friend_ID)
--- VALUES ;
-
-
--- Deleting clothes
--- DELETE FROM clothes
--- WHERE item_ID = " " ;
-
--- Adding new clothes. item_id is auto incremented so we do not have to ask for input
--- INSERT INTO clothes (item_type, item_description, weather_tag, occasion_tag, mood_tag)
--- VALUES ;
-
-
--- next step is to show all clothes to enable input for the next step:
--- SELECT item_ID, item_description, user_ID, user_name FROM ownership;
-
-
--- assigning clothes ownership
--- INSERT INTO ownership (item_ID, owner_ID)
--- VALUES ;
-
-
--- assigning availability status for the new item
--- INSERT INTO availability_status (item_ID, item_status)
--- VALUES ;
-
-
--- running 'laundry' function to clean the clothes, e.g.
--- UPDATE availability_status AS a
--- SET a.item_status = 'available'
--- WHERE a.item_status = 'dirty'
--- AND a.item_id IN (
---   SELECT o.item_id
---   FROM ownership AS o
---   WHERE o.owner_id = 1
--- );
-
-
-
-
--- changing the item status from 'available' to 'taken' after it was selected by a user
--- UPDATE availability_status AS a
--- SET a.item_status = 'taken'
--- WHERE a.item_id in (1,2,3);
-
--- changing the item status 'dirty' after user puts it away
--- UPDATE availability_status AS a
--- SET a.item_status = 'dirty'
--- WHERE a.item_id in (1,2,3);
-
-
--- overview of the wardrobes of your own and friends that YOU SHARE your wardrobe with
--- SELECT u1.user_id, u1.user_name, u2.user_id AS friend_id, u2.user_name AS friend_name
--- FROM users AS u1
--- INNER JOIN friends AS f ON u1.user_id = f.user_id
--- INNER JOIN users AS u2 ON f.friend_id = u2.user_id
--- WHERE u1.user_id in (2)
--- ORDER BY u1.user_id;
-
-
--- overview of users who put you as their friend to SHARE clothes WITH YOU:
--- SELECT u1.user_id, u1.user_name
--- FROM users AS u1
--- INNER JOIN friends AS f ON u1.user_id = f.user_id
--- INNER JOIN users AS u2 ON f.friend_id = u2.user_id
--- WHERE u2.user_id in (1)
--- AND u1.user_id <> 1
--- ORDER BY u2.user_id;
-
-
--- count of items with status 'available' for a certain user (user 1):
--- SELECT COUNT(*) AS count_available_items
--- FROM availability_status AS a
--- JOIN ownership AS o ON a.item_id = o.item_id
--- WHERE a.item_status = 'available' AND o.owner_id = 1;
-
-
--- count of items with status 'dirty' for a certain user (user 1):
--- SELECT COUNT(*) AS count_available_items
--- FROM availability_status AS a
--- JOIN ownership AS o ON a.item_id = o.item_id
--- WHERE a.item_status = 'dirty' AND o.owner_id = 1;
-
-
-
--- running a search based on certain tags:
-
--- SELECT c.item_description, c.item_id, o.owner_id
--- FROM clothes AS c
--- -- JOIN with availability_status TABLE
--- INNER JOIN
--- 	(SELECT item_id
--- 	FROM availability_status
--- 	WHERE item_status = 'available') AS a
--- ON c.item_ID = a.item_ID
-
--- -- JOIN with ownership TABLE
--- INNER JOIN ownership AS o
--- ON o.item_ID = c.item_ID
-
--- -- JOIN with friends TABLE
--- INNER JOIN
--- 	(SELECT user_ID
---     FROM friends
---     WHERE friend_ID = 1
---     ) AS f
--- ON f.user_ID = o.owner_ID
-
--- AND c.item_id IN (
---     SELECT c.item_ID
---     FROM clothes AS c
---     WHERE c.weather_tag = 'mild'
---     AND c.occasion_tag = 'work'
---     AND c.mood_tag = 'neutral' );
-
-
-
-
-
--- alternative code for performing the same search:
-
--- SELECT c.item_description, c.item_ID, o.owner_ID
--- FROM clothes AS c
--- INNER JOIN availability_status AS a ON c.item_ID = a.item_ID
--- INNER JOIN ownership AS o ON c.item_id = o.item_id
--- WHERE a.item_status = 'available'
--- AND c.item_id IN (
---     SELECT c.item_id
---     FROM clothes AS c
---     WHERE c.weather_tag = 'mild'
---     AND c.occasion_tag = 'work'
---     AND c.mood_tag = 'neutral'
--- )
--- AND c.item_id IN (
---     SELECT o.item_id
---     FROM ownership AS o
--- 	WHERE o.owner_id IN (
--- 		SELECT f.user_ID
--- 		FROM friends AS f
---         WHERE f.friend_ID = 1)
---         );
