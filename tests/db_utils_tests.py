@@ -1,5 +1,5 @@
 from unittest import TestCase, main, mock
-from unittest.mock import patch
+from unittest.mock import patch, call
 from WardrobePlanner.classes.db_utils import DBSearch, connect_to_db
 
 
@@ -440,6 +440,50 @@ class TestDBUtils(TestCase):
             """UPDATE availability_status SET item_status = 'dirty' WHERE item_ID = %s ;""", [item_id])
         mock_cursor.execute.assert_any_call("""DELETE FROM clothes AS c WHERE c.item_id = %s;""",
                                             [item_id])
+        mock_db_connection.commit.assert_called_once()
+        mock_cursor.close.assert_called_once()
+
+    def test_get_user_id_valid_input(self):
+        username = "Maria"
+        result = DBSearch.get_user_id(username)
+        expected = [(2,)]
+        self.assertEqual(expected, result)
+
+    def test_get_user_id_invalid_input(self):
+        username = "XYZ"
+        result = DBSearch.get_user_id(username)
+        expected = []
+        self.assertEqual(expected, result)
+
+    def test_get_item_id_valid_input(self):
+        item_description = "Light blue hoodie"
+        result = DBSearch.get_item_id(item_description)
+        expected = [(72,)]
+        self.assertEqual(expected, result)
+
+    def test_get_item_id_invalid_input(self):
+        item_description = "XYZ"
+        result = DBSearch.get_item_id(item_description)
+        expected = []
+        self.assertEqual(expected, result)
+
+    @patch('WardrobePlanner.classes.db_utils.connect_to_db')
+    def test_add_item_ID(self, mock_connect_to_db):
+        # Mock the return value of connect_to_db
+        mock_db_connection = mock_connect_to_db.return_value
+        mock_cursor = mock_db_connection.cursor.return_value
+
+        # Call the function with test data
+        user_ID = 1
+        DBSearch.add_item_ID(user_ID)
+
+        # Assert that the expected methods are called
+        mock_connect_to_db.assert_called_once()
+        mock_db_connection.cursor.assert_called_once()
+        mock_cursor.execute.assert_has_calls(
+            [call('INSERT INTO ownership (owner_ID)\n                                        VALUES (%s);', [user_ID]),
+             call('SELECT item_id FROM ownership ORDER BY item_id DESC LIMIT 1;')])
+
         mock_db_connection.commit.assert_called_once()
         mock_cursor.close.assert_called_once()
 
