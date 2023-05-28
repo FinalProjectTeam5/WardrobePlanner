@@ -119,7 +119,7 @@ class Test_DBUtils(TestCase):
         """This function is always returning a list of all created users and their ids, regardless of existing / non-existing username
         - so only 1 test has been created"""
         result = DBSearch.get_all_users_and_ids()
-        expected = [(1, 'Anna'), (2, 'Maria'), (3, 'Jenny'), (4, 'Lucy')]
+        expected = [(1, 'Anna'), (2, 'Maria'), (3, 'Jenny'), (4, 'Lucy'), (5, 'Kim'), (6, 'Olga')]
         self.assertEqual(expected, result)
 
     def test_get_location_valid_input(self):
