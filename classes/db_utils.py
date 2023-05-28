@@ -149,6 +149,7 @@ class DBSearch:
             raise NoConnection
         else:
             cursor.execute("""INSERT INTO friends (user_id, friend_id) VALUES (%s, %s)""", [user_id, friend_id])
+            cursor.execute("""INSERT INTO friends (user_id, friend_id) VALUES (%s, %s)""", [friend_id, user_id])
             db_connection.commit()
         finally:
             cursor.close()
@@ -163,6 +164,8 @@ class DBSearch:
         else:
             cursor.execute("""DELETE FROM friends AS f WHERE f.friend_id = %s AND f.user_id = %s""",
                            [friend_id, user_id])
+            cursor.execute("""DELETE FROM friends AS f WHERE f.friend_id = %s AND f.user_id = %s""",
+                           [user_id, friend_id])
             db_connection.commit()
         finally:
             cursor.close()
