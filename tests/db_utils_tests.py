@@ -442,27 +442,6 @@ class TestDBUtils(TestCase):
         mock_db_connection.commit.assert_called_once()
         mock_cursor.close.assert_called_once()
 
-
-@patch('WardrobePlanner.classes.db_utils.connect_to_db')
-def test_change_to_dirty(self, mock_connect_to_db):
-    # Mock the return value of connect_to_db
-    mock_db_connection = mock_connect_to_db.return_value
-    mock_cursor = mock_db_connection.cursor.return_value
-
-    # Call the function with test data
-    item_id = 1
-
-    DBSearch.change_to_dirty(item_id)
-
-    # Assert that the expected methods are called
-    mock_connect_to_db.assert_called_once()
-    mock_db_connection.cursor.assert_called_once()
-    mock_cursor.execute.assert_called_once_with(
-        """UPDATE availability_status SET item_status = 'dirty' WHERE item_ID = %s ;""", [item_id])
-
-    mock_db_connection.commit.assert_called_once()
-    mock_cursor.close.assert_called_once()
-
     def test_get_user_id_valid_input(self):
         username = "Maria"
         result = DBSearch.get_user_id(username)
