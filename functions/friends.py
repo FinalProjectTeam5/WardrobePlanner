@@ -21,8 +21,7 @@ def show_friends_list(user_id):
     friends_list = DBSearch.get_friends_list(user_id)
     for friend in friends_list:
         friends.append(friend[1])
-
-    return "Here is a list of your friends: {}".format(", ".join(friends))
+    return "Here is a list of your friends: {}.".format(", ".join(friends))
 
 
 def delete_friend(user_id):
