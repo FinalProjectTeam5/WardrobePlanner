@@ -11,7 +11,7 @@ CREATE TABLE users (
 
 CREATE TABLE user_location (
     user_ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    home_town VARCHAR(50),
+    home_town VARCHAR(255),
     latitude FLOAT,
     longitude FLOAT
 
