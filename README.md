@@ -1,4 +1,4 @@
-![Wardrobe Planner logo](/WardrobePlanner/wardrobe_planner-logo.png "logo")
+![Wardrobe Planner logo](https://raw.githubusercontent.com/FinalProjectTeam5/WardrobePlanner/main/wardrobe_planner-logo.png?token=GHSAT0AAAAAACAK5XJS7BYDHTV2IODBPH5EZDTWYYQ "logo")
 ___
 **Wardrobe Planner is a final group project of a Code First Girls Nanodegree.**
 ___
