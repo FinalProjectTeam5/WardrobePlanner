@@ -1,5 +1,5 @@
 import mysql.connector
-from WardrobePlanner.classes.config import USER, PASSWORD, HOST
+from WardrobePlanner.config import USER, PASSWORD, HOST
 
 
 class NoConnection(Exception):
