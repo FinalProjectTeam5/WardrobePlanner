@@ -6,6 +6,10 @@ def add_item_id(user_id):
     return DBSearch.add_item_ID(user_id)
 
 
+def add_item_id_availability():
+    return DBSearch.add_item_ID_availability()
+
+
 def add_item(item_id):
     print("What type of item are you adding?")
     item_type = users_choices("item_type")
@@ -28,7 +32,7 @@ def delete_item():
 def laundry(user_id):
     while True:
         try:
-            wanna_do_laundry = input("Do you want to clean all your clothes? y/n \n")
+            wanna_do_laundry = input("Do you want to clean all your dirty clothes? y/n \n")
             if wanna_do_laundry.lower() == "y":
                 DBSearch.do_laundry(user_id)
                 return "All of your clothes are clean now!"
@@ -41,7 +45,7 @@ def laundry(user_id):
 
 
 def notification_laundry(user_id):
-    notif = "You have {} available clothes, and {} dirty clothes. "\
+    notif = "You have {} available clothes, and {} dirty clothes. " \
         .format(DBSearch.show_count_of_clothes_available(user_id)[0][0],
                 DBSearch.show_count_of_clothes_dirty(user_id)[0][0])
     if DBSearch.show_count_of_clothes_dirty(user_id)[0][0] == 0:

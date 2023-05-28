@@ -2,7 +2,7 @@
 # from WardrobePlanner.classes.item import Item
 from WardrobePlanner.classes.dashboard_class import Dashboard
 from WardrobePlanner.functions.friends import add_friend, delete_friend, show_friends_list
-from WardrobePlanner.functions.manage_wardrobe import add_item, delete_item, laundry, add_item_id, notification_laundry
+from WardrobePlanner.functions.manage_wardrobe import add_item, delete_item, laundry, add_item_id, notification_laundry, add_item_id_availability
 from WardrobePlanner.functions.search.search_dashboard import search_dashboard
 
 
@@ -52,6 +52,7 @@ def dashboard(user):
         if sub_dashboard_3_choice == 1:
             item_id = add_item_id(user.user_id)[0][0]
             item_added = add_item(item_id)
+            add_item_id_availability()
             print(item_added)
             return dashboard(user)
         # Add items to wardrobe

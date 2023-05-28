@@ -329,6 +329,22 @@ class DBSearch:
             cursor.close()
 
     @staticmethod
+    def add_item_ID_availability():
+        try:
+            db_connection = connect_to_db()
+            cursor = db_connection.cursor()
+        except Exception:
+            raise NoConnection
+        else:
+            cursor.execute("""SELECT item_id FROM clothes ORDER BY item_id DESC LIMIT 1;""")
+            result = cursor.fetchall()
+            cursor.execute("""INSERT INTO availability_status (item_ID, item_status)
+                                            VALUES (%s, %s);""", [result[0][0], "available"])
+            db_connection.commit()
+        finally:
+            cursor.close()
+
+    @staticmethod
     def delete_item_from_wardrobe(item_id):
         try:
             db_connection = connect_to_db()
