@@ -11,7 +11,7 @@ from WardrobePlanner.classes.dashboard_class import Menu
 
 class TestCheckCity(TestCase):
     def test_hometown_input_check_valid_input(self):
-        expected = True
+        expected = "generate_list"
         result = hometown_input_check("Rome")
         self.assertEqual(expected, result)
 
