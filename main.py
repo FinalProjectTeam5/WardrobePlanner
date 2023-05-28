@@ -20,7 +20,6 @@ def main():
                 user_data = DBSearch.get_user_info(username)
                 user_id = user_data[0][0]
                 user_location = DBSearch.get_location(user_id)
-                # We use user_data to create a user object, gonna have to change the home_town part
                 user = User(user_data[0][0], user_data[0][1], user_data[0][2], user_location[0][0], user_location[0][1], user_location[0][2])
                 break
             elif lets_start == "2":

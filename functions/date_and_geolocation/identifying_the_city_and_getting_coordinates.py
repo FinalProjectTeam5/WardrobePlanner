@@ -12,15 +12,17 @@ def getting_hometown():
                             "\n"
                             "Your hometown: ")
         user_hometown_choice = hometown_input_check(user_typed_hometown)
-        if user_hometown_choice:
+        if user_hometown_choice == "generate_list":
             possible_cities = check_city(user_typed_hometown)
             list_prep = cleaning_up_results(possible_cities)
             city_list = city_list_for_interface(list_prep)
             print("Choose your hometown from the list:")
             for city in city_list:
                 print(city)
-        else:
-            return
+        elif user_hometown_choice == "again":
+            return "again"
+        elif user_hometown_choice =="no_hometown":
+            return False
         while True:
             hometown = input("\n_")
             if hometown.isdigit() and int(hometown) <= len(city_list):
@@ -28,16 +30,9 @@ def getting_hometown():
             else:
                 print("Please choose an option from the list. Try again.")
         if int(hometown) == len(city_list) - 1:
-            print(len(city_list) -1)
             return "again"
         elif int(hometown) == len(city_list):
-            print(len(city_list))
             return False
         else:
             hometown = list_prep[int(hometown) - 1]
-            print(hometown)
             return hometown
-
-
-
-

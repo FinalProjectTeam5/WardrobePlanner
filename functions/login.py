@@ -8,7 +8,8 @@ def sign_up():
     hometown = "again"
     while hometown == "again":
         hometown = getting_hometown()
-        print(hometown)
+
+    print(hometown)
 
     if hometown == False:
         user_dict = {
@@ -24,9 +25,8 @@ def sign_up():
             "password": password,
             "hometown": hometown[0],
             "latitude": hometown[1][0],
-            "longitude": hometown[1][0]
+            "longitude": hometown[1][1]
         }
-    print(user_dict)
     DBSearch.create_new_user(user_dict["username"], user_dict["password"])
     user_id = DBSearch.get_user_id(username)[0][0]
     DBSearch.set_hometown(user_id, user_dict["hometown"], user_dict["latitude"], user_dict["longitude"])
@@ -81,7 +81,6 @@ def verify_password(password_given, password_in_database ):
 def login():
     username = input("Your username: ")
     results = DBSearch.username_check()
-    #print(results)
     found_ya = False
     for result in results:
         if username == result[0]:
@@ -90,9 +89,7 @@ def login():
     if found_ya:
         password_given = input("Your password: ")
         password_in_database = fetch_password(username)
-        #print(password_in_database)
         if verify_password(password_given, password_in_database):
-            #print(username)
             return username
     else:
         try:
