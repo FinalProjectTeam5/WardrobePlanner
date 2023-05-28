@@ -4,6 +4,8 @@ from WardrobePlanner.functions.date_and_geolocation.identifying_the_city_and_get
 
 def sign_up():
     username = get_new_username()
+    if username == False:
+        return login()
     password = get_new_password(username)
     hometown = "again"
     while hometown == "again":
@@ -48,7 +50,7 @@ def get_new_username():
                 break
         if found_ya:
             print("You already have an account here. Login here: ")
-            return login()
+            return False
         else:
             return username
 
